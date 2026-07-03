@@ -176,7 +176,7 @@ function drawVerifyQR(ctx, cx, cy, size, id) {
 /* ---------- membership application (approval-based) ----------
    Paste your Google Apps Script Web App URL below to record applications
    in your sheet. Until then, the form falls back to opening an email to you. */
-const APPLY_ENDPOINT = ""; // e.g. "https://script.google.com/macros/s/AKfy.../exec"
+const APPLY_ENDPOINT = "https://script.google.com/macros/s/AKfycbyI3mg-sZR5uYdGHDl3t4VvU8raiJHjLEzSSuRPiENBt9bOmZ5Bz0_6fQAVXvt7RXI2Gg/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   const y = document.getElementById("year"); if (y) y.textContent = JOIN_YEAR;
