@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sciovia">
+  <title>Sciovia</title>
+  <!-- light variant, for dark backgrounds -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#f4e7cd" stroke-width="1.2" opacity="0.30"/>
+  <!-- East -->
+  <path d="M60 32 L38 26 L32 32 Z" fill="#f4e7cd"/>
+  <path d="M60 32 L38 38 L32 32 Z" fill="#b79a63"/>
+  <!-- South -->
+  <path d="M32 60 L26 38 L32 32 Z" fill="#f4e7cd"/>
+  <path d="M32 60 L38 38 L32 32 Z" fill="#b79a63"/>
+  <!-- West -->
+  <path d="M4 32 L26 26 L32 32 Z" fill="#f4e7cd"/>
+  <path d="M4 32 L26 38 L32 32 Z" fill="#b79a63"/>
+  <!-- North: gold guiding point -->
+  <path d="M32 4 L26 26 L32 32 Z" fill="#f0c069"/>
+  <path d="M32 4 L38 26 L32 32 Z" fill="#cf9a3a"/>
+  <!-- pivot -->
+  <circle cx="32" cy="32" r="3" fill="#0e3a35" stroke="#f4e7cd" stroke-width="1"/>
+</svg>

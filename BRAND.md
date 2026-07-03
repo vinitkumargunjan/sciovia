@@ -90,12 +90,39 @@ Sciovia should read as if written by a thoughtful senior colleague — clear eno
 
 ---
 
-## Visual identity (starter direction)
+## Visual identity
 
-Keep it calm and academic. Decisions can be refined later, but start consistent.
+### The logo — a faceted compass rose
 
-- **Logomark idea:** a simple compass needle, a rising path, or an upward line — echoing "the path of knowing." Line-based, single color, works at small size.
-- **Wordmark:** "Sciovia" in a clean, humanist serif or a restrained sans. No effects.
-- **Palette:** one deep, trustworthy anchor color (deep blue or teal-green) + a warm neutral + plenty of white space.
-- **Type:** one serif for headings, one sans for body. Nothing decorative.
-- **Feel:** a well-run library, not a startup landing page.
+The mark is a four-point compass rose. Its meaning is the name itself: *scio* ("I know") + *via* ("the way") = **the path of knowing.**
+
+- **The compass** — navigation and guidance. Sciovia helps researchers find their way.
+- **The gold north point** — the guiding light: the opportunity worth reaching, and the warmth of service. (The other three points are pine green; only north is gold.)
+- **The ring** — the global research community, and the horizon.
+- **The center pivot** — the steady point everything turns around: trust.
+
+**Assets** (in `assets/img/`):
+| File | Use |
+|---|---|
+| `sciovia-mark.svg` | Symbol only — favicon, avatar, app icon |
+| `sciovia-mark-light.svg` | Symbol for dark backgrounds |
+| `sciovia-logo-horizontal.svg` | Mark + wordmark — website header, email, letterhead |
+| `sciovia-logo-stacked.svg` | Mark above wordmark + tagline — social profile, posters |
+
+Logo rules: keep clear space around it (at least the width of one compass point); never recolor, stretch, rotate, or add effects; never place the dark mark on a dark background (use the light variant).
+
+### Palette
+
+| Role | Colour | Hex |
+|---|---|---|
+| Anchor | Pine green | `#14524b` |
+| Deep | Pine dark | `#0e3a35` |
+| Accent | Gold | `#c1832f` |
+| Background | Warm cream | `#faf7f1` |
+| Ink | Near-black green | `#1a2a2a` |
+
+### Type
+
+- **Display / headings:** Fraunces (serif) — warm, characterful, credible.
+- **Body / UI:** Inter (sans) — clean and highly legible.
+- **Feel:** a well-run library, not a startup landing page. Calm, generous white space, nothing decorative.

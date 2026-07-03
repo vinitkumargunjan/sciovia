@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sciovia">
+  <title>Sciovia</title>
+  <!-- bezel ring: the research community / the horizon -->
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#0e3a35" stroke-width="1.4" opacity="0.16"/>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#0e3a35" stroke-width="0.6" opacity="0.10" stroke-dasharray="0.5 3.5"/>
+  <!-- East -->
+  <path d="M60 32 L38 26 L32 32 Z" fill="#3a897b"/>
+  <path d="M60 32 L38 38 L32 32 Z" fill="#103f39"/>
+  <!-- South -->
+  <path d="M32 60 L26 38 L32 32 Z" fill="#3a897b"/>
+  <path d="M32 60 L38 38 L32 32 Z" fill="#103f39"/>
+  <!-- West -->
+  <path d="M4 32 L26 26 L32 32 Z" fill="#3a897b"/>
+  <path d="M4 32 L26 38 L32 32 Z" fill="#103f39"/>
+  <!-- North: the guiding point, in gold -->
+  <path d="M32 4 L26 26 L32 32 Z" fill="#e0a648"/>
+  <path d="M32 4 L38 26 L32 32 Z" fill="#b17a22"/>
+  <!-- compass pivot -->
+  <circle cx="32" cy="32" r="3" fill="#faf7f1" stroke="#b17a22" stroke-width="1"/>
+</svg>
