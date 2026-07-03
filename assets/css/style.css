@@ -274,4 +274,31 @@ img { max-width: 100%; }
   .subscribe-form { flex-direction: column; }
   .subscribe-form input { border-radius: var(--radius-sm); }
   .panel { padding: 26px; }
+  .member-result { grid-template-columns: 1fr !important; }
 }
+
+/* ---------- Membership ---------- */
+.badge-soft {
+  display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--gold); background: var(--gold-soft);
+  padding: .2em .6em; border-radius: 999px; margin-left: 8px; vertical-align: middle;
+}
+.tier-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 30px; }
+@media (max-width: 820px) { .tier-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .tier-grid { grid-template-columns: 1fr; } }
+.tier {
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 20px; text-align: center;
+}
+.tier h4 { font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 6px; color: var(--pine); }
+.tier p { margin: 0; font-size: .86rem; color: var(--muted); }
+
+.member-result { display: none; grid-template-columns: 1.1fr .9fr; gap: 30px; align-items: center; margin-top: 8px; }
+.member-result.show { display: grid; }
+#member-card { width: 100%; max-width: 560px; border-radius: 14px; box-shadow: var(--shadow-lg); display: block; }
+.member-no-big {
+  font-family: var(--font-sans); font-weight: 600; font-size: 1.6rem; color: #fff;
+  letter-spacing: .02em; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  border-radius: var(--radius-sm); padding: .5em .8em; display: inline-block; margin: 6px 0 18px;
+}
+.member-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
