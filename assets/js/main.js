@@ -7,7 +7,7 @@
 
 // Where "List an event" and "Subscribe" submissions are sent.
 // Change this to a dedicated address (e.g. hello@sciovia.org) once available.
-const CONTACT_EMAIL = "vinitkumargunjan@gmail.com";
+const CONTACT_EMAIL = "teamsciovia@gmail.com";
 
 const CAT_SLUG = {
   "Conference": "conference",

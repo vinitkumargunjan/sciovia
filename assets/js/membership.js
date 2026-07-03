@@ -4,7 +4,7 @@
    renders a downloadable membership card on a canvas.
    ============================================================ */
 
-const CONTACT_EMAIL = "vinitkumargunjan@gmail.com"; // register mailbox — change to hello@sciovia.org later
+const CONTACT_EMAIL = "teamsciovia@gmail.com"; // Sciovia team mailbox
 const JOIN_YEAR = new Date().getFullYear();
 
 /* Deterministic member number from email (FNV-1a hash → 6 digits).
