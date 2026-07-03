@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sciovia — The path of knowing</title>
+<meta name="description" content="An independent initiative helping the research community discover opportunities: calls for papers, funding, positions, conferences, and practical guidance. Curated by Dr. Vinit Kumar Gunjan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2314524b'/><path d='M16 7l3 6 6 3-6 3-3 6-3-6-6-3 6-3z' fill='%23f4e7cd'/></svg>">
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#14524b"/><path d="M16 6l3.2 6.8L26 16l-6.8 3.2L16 26l-3.2-6.8L6 16l6.8-3.2z" fill="#f4e7cd"/></svg>
+      Sciovia
+    </a>
+    <nav class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="events.html">Opportunities</a>
+      <a class="nav-link" href="#weekly">Newsletter</a>
+      <a class="nav-link" href="#about">About</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-gold" href="events.html#list">List an event</a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <p class="eyebrow">An independent initiative for the research community</p>
+      <h1>Find your way to the <span class="accent">right opportunity.</span></h1>
+      <p class="lead">Sciovia curates trustworthy research opportunities and practical guidance — so you spend less time searching and more time on work that matters.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="events.html">Browse opportunities</a>
+        <a class="btn btn-ghost btn-lg" href="#weekly">Get the weekly digest</a>
+      </div>
+      <div class="hero-tags">
+        <span class="chip">Calls for Papers</span>
+        <span class="chip">Funding</span>
+        <span class="chip">Faculty &amp; PhD Positions</span>
+        <span class="chip">Conferences</span>
+        <span class="chip">Awards</span>
+        <span class="chip">Research Integrity</span>
+      </div>
+      <p class="attribution">An initiative by Dr. Vinit Kumar Gunjan · Not affiliated with any organization</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== What you'll find ===== -->
+<section class="section" id="find">
+  <div class="wrap">
+    <div class="section-head center">
+      <p class="eyebrow">What Sciovia brings you</p>
+      <h2>Everything a researcher chases, in one calm place.</h2>
+      <p class="lead">Curated and verified. No noise, no hype — just what's genuinely useful this week.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card reveal"><div class="ic">📄</div><h3>Calls for Papers</h3><p>Journals and special issues seeking submissions in your field.</p></div>
+      <div class="card reveal"><div class="ic">💰</div><h3>Funding</h3><p>Grants, fellowships, and calls — with deadlines you won't miss.</p></div>
+      <div class="card reveal"><div class="ic">🎓</div><h3>Positions</h3><p>Faculty, postdoctoral, and PhD openings across the world.</p></div>
+      <div class="card reveal"><div class="ic">🎤</div><h3>Conferences</h3><p>Events worth your time, with submission and registration dates.</p></div>
+      <div class="card reveal"><div class="ic">🌟</div><h3>Researcher of the Week</h3><p>We celebrate good work — the credit goes to the people doing it.</p></div>
+      <div class="card reveal"><div class="ic">🧭</div><h3>Practical Guidance</h3><p>Honest tips on publishing, reviewing, and research integrity.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Featured opportunities ===== -->
+<section class="section band" id="featured">
+  <div class="wrap">
+    <div class="ev-toolbar">
+      <div class="section-head" style="margin-bottom:0;">
+        <p class="eyebrow">Closing soon</p>
+        <h2>Featured opportunities</h2>
+      </div>
+      <a class="btn btn-ghost" href="events.html">View all →</a>
+    </div>
+    <div class="ev-grid" id="featured-events"><!-- populated by JS --></div>
+  </div>
+</section>
+
+<!-- ===== Weekly digest / subscribe ===== -->
+<section class="section band-pine" id="weekly">
+  <div class="wrap center">
+    <p class="eyebrow">The weekly edition</p>
+    <h2>One short, honest email each week.</h2>
+    <p class="lead" style="margin:0 auto;">The best calls, funding, and positions of the week — plus one practical tip. Free, independent, and a few minutes to read.</p>
+    <div style="display:flex;justify-content:center;">
+      <div>
+        <form class="subscribe-form">
+          <input type="email" name="email" placeholder="you@university.edu" required aria-label="Your email">
+          <button class="btn btn-gold" type="submit">Subscribe</button>
+        </form>
+        <p class="sub-status" style="display:none;color:var(--gold-soft);font-size:.88rem;margin-top:12px;"></p>
+        <p style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:14px;">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== About / values ===== -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head center">
+      <p class="eyebrow">Why Sciovia</p>
+      <h2>Built to serve, not to sell.</h2>
+      <p class="lead">Our only measure of success is whether the community finds this genuinely useful.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card reveal"><h3>Service before self</h3><p>Sciovia is non-commercial and independent. What helps you decides everything we share.</p></div>
+      <div class="card reveal"><h3>Accuracy over volume</h3><p>Every listing is verified and linked to its source. One good item beats ten unchecked ones.</p></div>
+      <div class="card reveal"><h3>Fairness</h3><p>Opportunities are shared on merit — never for favor, never for a fee.</p></div>
+      <div class="card reveal"><h3>Celebration</h3><p>We lift others up and give credit where it's due, quietly and consistently.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA band ===== -->
+<section class="section band cta-band">
+  <div class="wrap">
+    <p class="eyebrow">Help the community see it</p>
+    <h2>Know of an opportunity worth sharing?</h2>
+    <p class="lead" style="margin:0 auto;">Add a conference, call, grant, or position — it takes a minute, and it reaches researchers who need it.</p>
+    <div class="btn-row">
+      <a class="btn btn-gold btn-lg" href="events.html#list">List an event</a>
+      <a class="btn btn-ghost btn-lg" href="events.html">Browse opportunities</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#f4e7cd"/><path d="M16 6l3.2 6.8L26 16l-6.8 3.2L16 26l-3.2-6.8L6 16l6.8-3.2z" fill="#14524b"/></svg>
+          Sciovia
+        </a>
+        <p>The path of knowing. An independent initiative helping the research community discover opportunities and share knowledge.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="index.html">Home</a>
+          <a href="events.html">Opportunities</a>
+          <a href="#weekly">Newsletter</a>
+          <a href="events.html#list">List an event</a>
+        </div>
+        <div class="footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/vinitkumargunjan/sciovia" target="_blank" rel="noopener">GitHub</a>
+          <a href="#about">About</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="attribution">Curated by Dr. Vinit Kumar Gunjan</p>
+      <p>© <span id="year">2026</span> Sciovia · Independent &amp; non-commercial</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

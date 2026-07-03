@@ -1,0 +1,74 @@
+[
+  {
+    "id": "sample-1",
+    "category": "Conference",
+    "title": "International Conference on Machine Intelligence",
+    "org": "Example University",
+    "location": "Singapore",
+    "mode": "Hybrid",
+    "dates": "10–12 November 2026",
+    "deadline": "2026-09-01",
+    "link": "https://example.com",
+    "sample": true
+  },
+  {
+    "id": "sample-2",
+    "category": "Call for Papers",
+    "title": "Special Issue: Trustworthy AI in Healthcare",
+    "org": "Journal of Applied Computing",
+    "location": "Online",
+    "mode": "Remote",
+    "dates": "Rolling",
+    "deadline": "2026-08-15",
+    "link": "https://example.com",
+    "sample": true
+  },
+  {
+    "id": "sample-3",
+    "category": "Funding",
+    "title": "Early-Career Research Fellowship (up to $50,000)",
+    "org": "XYZ Foundation",
+    "location": "Global",
+    "mode": "Remote",
+    "dates": "12-month award",
+    "deadline": "2026-08-30",
+    "link": "https://example.com",
+    "sample": true
+  },
+  {
+    "id": "sample-4",
+    "category": "Position",
+    "title": "Postdoctoral Researcher — Data Science",
+    "org": "Example Institute of Technology",
+    "location": "Berlin, Germany",
+    "mode": "On-site",
+    "dates": "2-year appointment",
+    "deadline": "2026-08-20",
+    "link": "https://example.com",
+    "sample": true
+  },
+  {
+    "id": "sample-5",
+    "category": "Conference",
+    "title": "Symposium on Sustainable Engineering",
+    "org": "Global Research Society",
+    "location": "Dubai, UAE",
+    "mode": "In-person",
+    "dates": "5–7 December 2026",
+    "deadline": "2026-10-10",
+    "link": "https://example.com",
+    "sample": true
+  },
+  {
+    "id": "sample-6",
+    "category": "Position",
+    "title": "PhD Studentship — Renewable Energy Systems",
+    "org": "Example University",
+    "location": "Manchester, UK",
+    "mode": "On-site",
+    "dates": "Fully funded, 3.5 years",
+    "deadline": "2026-09-15",
+    "link": "https://example.com",
+    "sample": true
+  }
+]
