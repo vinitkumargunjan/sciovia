@@ -70,5 +70,17 @@
     "deadline": "2026-09-15",
     "link": "https://example.com",
     "sample": true
+  },
+  {
+    "id": "sample-7",
+    "category": "Internship",
+    "title": "Summer Research Internship — AI Lab",
+    "org": "Example Research Institute",
+    "location": "Bengaluru, India",
+    "mode": "On-site",
+    "dates": "8 weeks · Summer 2027",
+    "deadline": "2026-12-15",
+    "link": "https://example.com",
+    "sample": true
   }
 ]

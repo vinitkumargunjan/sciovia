@@ -13,7 +13,8 @@ const CAT_SLUG = {
   "Conference": "conference",
   "Call for Papers": "cfp",
   "Funding": "funding",
-  "Position": "position"
+  "Position": "position",
+  "Internship": "internship"
 };
 
 /* ---------- helpers ---------- */
