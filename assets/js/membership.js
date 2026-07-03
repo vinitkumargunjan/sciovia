@@ -55,6 +55,49 @@ function fitFont(ctx, text, family, weight, maxSize, maxWidth) {
   return ctx.font;
 }
 
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmtDate(d) { return `${String(d.getDate()).padStart(2,"0")} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+
+/* text set around a circle */
+function drawArcText(ctx, text, cx, cy, r, centerDeg, spaceDeg, flip) {
+  ctx.save(); ctx.translate(cx, cy);
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  let a = centerDeg - ((text.length - 1) * spaceDeg) / 2;
+  for (const ch of text) {
+    ctx.save();
+    ctx.rotate(a * Math.PI / 180);
+    ctx.translate(0, -r);
+    if (flip) ctx.rotate(Math.PI);
+    ctx.fillText(ch, 0, 0);
+    ctx.restore();
+    a += spaceDeg;
+  }
+  ctx.restore();
+}
+
+/* the Sciovia seal — signature element, distinct from any ID card */
+function drawSeal(ctx, cx, cy) {
+  const gold = "#e0a648";
+  ctx.strokeStyle = gold;
+  ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, cy, 120, 0, Math.PI * 2); ctx.stroke();
+  ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(cx, cy, 94, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = gold; ctx.letterSpacing = "1px";
+  ctx.font = "600 15px Inter, Arial, sans-serif";
+  drawArcText(ctx, "SCIOVIA COMMUNITY", cx, cy, 107, 0, 8.5, false);
+  drawArcText(ctx, "THE PATH OF KNOWING", cx, cy, 107, 180, -8.5, true);
+  // side diamonds
+  [-107, 107].forEach(dx => {
+    ctx.save(); ctx.translate(cx + dx, cy); ctx.rotate(Math.PI / 4);
+    ctx.fillRect(-4, -4, 8, 8); ctx.restore();
+  });
+  // center compass + year
+  drawCompass(ctx, cx, cy - 8, 116, PALETTE);
+  ctx.textAlign = "center"; ctx.fillStyle = gold; ctx.letterSpacing = "3px";
+  ctx.font = "600 14px Inter, Arial, sans-serif";
+  ctx.fillText("EST · 2026", cx, cy + 66);
+  ctx.textAlign = "left"; ctx.letterSpacing = "0px";
+}
+
 async function drawCard(canvas, data) {
   const W = 1012, H = 638;
   canvas.width = W; canvas.height = H;
@@ -62,68 +105,54 @@ async function drawCard(canvas, data) {
 
   // background
   const g = ctx.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, "#0c332e"); g.addColorStop(0.55, "#14524b"); g.addColorStop(1, "#186056");
+  g.addColorStop(0, "#0c332e"); g.addColorStop(0.6, "#123f39"); g.addColorStop(1, "#16564d");
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-
-  // watermark compass
-  ctx.save(); ctx.globalAlpha = 0.06; drawCompass(ctx, W - 120, H - 70, 420, PALETTE); ctx.restore();
-
-  // gold inner border
-  ctx.strokeStyle = "rgba(224,166,72,0.5)"; ctx.lineWidth = 2;
-  ctx.strokeRect(24, 24, W - 48, H - 48);
+  // right seal panel tint + divider
+  ctx.fillStyle = "rgba(255,255,255,0.03)"; ctx.fillRect(706, 0, W - 706, H);
+  ctx.strokeStyle = "rgba(224,166,72,0.5)"; ctx.lineWidth = 2; ctx.strokeRect(22, 22, W - 44, H - 44);
+  ctx.strokeStyle = "rgba(224,166,72,0.28)"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(706, 44); ctx.lineTo(706, H - 44); ctx.stroke();
 
   const PAD = 56;
-  // header: compass + wordmark
-  drawCompass(ctx, PAD + 34, 88, 76, PALETTE);
   ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = "#faf7f1"; ctx.letterSpacing = "2px";
-  ctx.font = "600 46px Fraunces, Georgia, serif";
-  ctx.fillText("Sciovia", PAD + 88, 104);
-  // right label
+  // header
+  drawCompass(ctx, PAD + 30, 82, 68, PALETTE);
+  ctx.fillStyle = "#faf7f1"; ctx.letterSpacing = "1px";
+  ctx.font = "600 40px Fraunces, Georgia, serif";
+  ctx.fillText("Sciovia", PAD + 78, 96);
   ctx.letterSpacing = "4px"; ctx.textAlign = "right";
-  ctx.fillStyle = "#e0a648"; ctx.font = "600 18px Inter, Arial, sans-serif";
-  ctx.fillText("MEMBERSHIP CARD", W - PAD, 82);
-  ctx.textAlign = "left";
-
-  // divider
-  ctx.strokeStyle = "rgba(224,166,72,0.35)"; ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(PAD, 150); ctx.lineTo(W - PAD, 150); ctx.stroke();
+  ctx.fillStyle = "#e0a648"; ctx.font = "600 16px Inter, Arial, sans-serif";
+  ctx.fillText("MEMBER PASS", 690, 90); ctx.textAlign = "left";
+  ctx.strokeStyle = "rgba(224,166,72,0.30)"; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(PAD, 130); ctx.lineTo(690, 130); ctx.stroke();
 
   const label = (t, x, y) => {
     ctx.letterSpacing = "2px"; ctx.fillStyle = "#e0a648";
-    ctx.font = "600 16px Inter, Arial, sans-serif"; ctx.fillText(t, x, y);
+    ctx.font = "600 15px Inter, Arial, sans-serif"; ctx.fillText(t, x, y);
   };
-  const value = (t, x, y, size, mono) => {
+  const val = (t, x, y, size, mono, max) => {
     ctx.letterSpacing = mono ? "1px" : "0px"; ctx.fillStyle = "#faf7f1";
-    ctx.font = mono ? `500 ${size}px 'Inter', monospace` : fitFont(ctx, t, "Fraunces, Georgia, serif", 600, size, W - PAD - 300);
+    ctx.font = mono ? `500 ${size}px 'Inter', monospace`
+                    : fitFont(ctx, t, "Fraunces, Georgia, serif", 600, size, max || 360);
     ctx.fillText(t, x, y);
   };
 
-  // member name
-  label("MEMBER", PAD, 210);
-  value(data.name || "—", PAD, 262, 52, false);
+  // name + flourish
+  label("MEMBER", PAD, 188);
+  val(data.name || "—", PAD, 238, 44, false, 620);
+  ctx.strokeStyle = "#e0a648"; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(PAD, 256); ctx.lineTo(PAD + 70, 256); ctx.stroke();
 
-  // row: number / category
-  label("MEMBERSHIP NO.", PAD, 340);
-  value(data.number, PAD, 380, 30, true);
-  label("CATEGORY", 470, 340);
-  value(data.category || "Member", 470, 380, 28, false);
+  // fields (Sciovia-native labels)
+  label("SCIOVIA ID", PAD, 322); val(data.number, PAD, 360, 28, true);
+  label("STANDING", 380, 322); val(data.category || "Member", 380, 360, 26, false, 300);
+  label("AFFILIATION", PAD, 432); val(data.affiliation || "—", PAD, 470, 24, false, 600);
+  label("ISSUED", PAD, 540); val(fmtDate(new Date()), PAD, 576, 22, false, 220);
+  label("RENEWS", 300, 540); val(`Dec ${JOIN_YEAR + 1}`, 300, 576, 22, false, 200);
 
-  // row: affiliation
-  label("AFFILIATION", PAD, 448);
-  value(data.affiliation || "—", PAD, 486, 26, false);
-
-  // footer: dates
-  label("MEMBER SINCE", PAD, 556);
-  value(String(JOIN_YEAR), PAD, 592, 24, false);
-  label("VALID THROUGH", 320, 556);
-  value(`Dec ${JOIN_YEAR + 1}`, 320, 592, 24, false);
-
-  // tagline bottom-right
-  ctx.textAlign = "right"; ctx.letterSpacing = "1px";
-  ctx.fillStyle = "rgba(250,247,241,0.6)"; ctx.font = "400 20px Fraunces, Georgia, serif";
-  ctx.fillText("The path of knowing", W - PAD, 592);
-  ctx.textAlign = "left"; ctx.letterSpacing = "0px";
+  // seal
+  drawSeal(ctx, 860, 300);
+  ctx.letterSpacing = "0px"; ctx.textAlign = "left";
 }
 
 /* ---------- wire form ---------- */
