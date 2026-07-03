@@ -1,0 +1,22 @@
+# GitHub Pages configuration for Sciovia
+# When you enable Pages (Settings -> Pages), GitHub builds the site from these files.
+
+title: Sciovia
+description: >-
+  An independent initiative helping the research community discover
+  opportunities. Curated by Dr. Vinit Kumar Gunjan.
+tagline: The path of knowing.
+
+# A clean, professional theme supported natively by GitHub Pages — no extra files needed.
+theme: jekyll-theme-cayman
+
+# Set this to your domain once registered, e.g. https://sciovia.org
+url: ""
+baseurl: ""
+
+# Files/folders that should not be published as web pages.
+exclude:
+  - README.md
+  - CONTRIBUTING.md
+  - templates/
+  - content/data/

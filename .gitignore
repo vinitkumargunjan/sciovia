@@ -1,0 +1,11 @@
+# Jekyll / GitHub Pages build output
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
