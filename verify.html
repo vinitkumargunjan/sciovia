@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify a Member Pass — Sciovia</title>
+<meta name="description" content="Verify a Sciovia Member Pass.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" type="image/svg+xml" href="assets/img/sciovia-mark.svg">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <img class="mark" src="assets/img/sciovia-mark.svg" alt="" width="30" height="30">
+      Sciovia
+    </a>
+    <nav class="nav-links">
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="events.html">Opportunities</a>
+      <a class="nav-link" href="membership.html">Membership</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-gold" href="membership.html#join">Apply</a>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="section" style="min-height:60vh;">
+  <div class="wrap center" style="max-width:640px;">
+    <img src="assets/img/sciovia-mark.svg" alt="" width="72" height="72" style="margin-bottom:18px;">
+    <p class="eyebrow">Member Pass verification</p>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);">Sciovia Member Pass</h1>
+    <div class="panel" style="margin-top:24px;text-align:left;">
+      <p style="font-size:.78rem;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin:0 0 4px;">Sciovia ID</p>
+      <p id="vid" style="font-family:var(--font-sans);font-weight:600;font-size:1.6rem;margin:0 0 8px;color:var(--ink);">—</p>
+      <p id="vnote" style="color:var(--muted);font-size:.92rem;margin:0;"></p>
+    </div>
+    <p class="form-note" style="margin-top:20px;">This page confirms the Sciovia ID encoded on a Member Pass. A full member directory and live registry verification are coming soon. Sciovia is an independent community initiative.</p>
+    <div style="margin-top:24px;"><a class="btn btn-primary" href="membership.html#join">Apply for membership</a></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-bottom" style="border:none;padding-top:0;">
+      <p class="attribution">Curated by Dr. Vinit Kumar Gunjan</p>
+      <p>© <span id="year">2026</span> Sciovia · Independent &amp; non-commercial</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const id = (params.get("id") || "").trim();
+  const idEl = document.getElementById("vid");
+  const noteEl = document.getElementById("vnote");
+  if (/^SCV-\d{4}-\d{6}$/.test(id)) {
+    idEl.textContent = id;
+    noteEl.textContent = "This is a valid Sciovia Member Pass identifier.";
+  } else if (id) {
+    idEl.textContent = id;
+    noteEl.textContent = "This identifier is not in the expected Sciovia format.";
+  } else {
+    idEl.textContent = "No ID provided";
+    noteEl.textContent = "Scan the QR code on a Member Pass, or open a link that includes an id.";
+  }
+  document.getElementById("year").textContent = new Date().getFullYear();
+  document.querySelector(".nav-toggle")?.addEventListener("click", () =>
+    document.querySelector(".nav-links")?.classList.toggle("open"));
+</script>
+</body>
+</html>

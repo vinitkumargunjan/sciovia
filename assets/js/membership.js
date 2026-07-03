@@ -150,63 +150,79 @@ async function drawCard(canvas, data) {
   label("ISSUED", PAD, 540); val(fmtDate(new Date()), PAD, 576, 22, false, 220);
   label("RENEWS", 300, 540); val(`Dec ${JOIN_YEAR + 1}`, 300, 576, 22, false, 200);
 
-  // seal
-  drawSeal(ctx, 860, 300);
+  // seal + verification QR
+  drawSeal(ctx, 860, 246);
+  drawVerifyQR(ctx, 860, 486, 104, data.number);
   ctx.letterSpacing = "0px"; ctx.textAlign = "left";
 }
 
-/* ---------- wire form ---------- */
+/* verification QR — links to the Sciovia verify page for this Sciovia ID */
+function drawVerifyQR(ctx, cx, cy, size, id) {
+  if (typeof qrcode === "undefined") return;
+  const url = `https://vinitkumargunjan.github.io/sciovia/verify.html?id=${encodeURIComponent(id)}`;
+  const qr = qrcode(0, "M"); qr.addData(url); qr.make();
+  const n = qr.getModuleCount(), pad = 9, cell = size / n;
+  ctx.fillStyle = "#e0a648"; ctx.textAlign = "center"; ctx.letterSpacing = "2px";
+  ctx.font = "600 13px Inter, Arial, sans-serif";
+  ctx.fillText("SCAN TO VERIFY", cx, cy - size / 2 - pad - 12);
+  ctx.fillStyle = "#f4e7cd";
+  ctx.beginPath(); ctx.roundRect(cx - size / 2 - pad, cy - size / 2 - pad, size + pad * 2, size + pad * 2, 10); ctx.fill();
+  ctx.fillStyle = "#0e3a35";
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++)
+    if (qr.isDark(r, c)) ctx.fillRect(cx - size / 2 + c * cell, cy - size / 2 + r * cell, Math.ceil(cell), Math.ceil(cell));
+  ctx.textAlign = "left"; ctx.letterSpacing = "0px";
+}
+
+/* ---------- membership application (approval-based) ----------
+   Paste your Google Apps Script Web App URL below to record applications
+   in your sheet. Until then, the form falls back to opening an email to you. */
+const APPLY_ENDPOINT = ""; // e.g. "https://script.google.com/macros/s/AKfy.../exec"
+
 document.addEventListener("DOMContentLoaded", () => {
   const y = document.getElementById("year"); if (y) y.textContent = JOIN_YEAR;
   document.querySelector(".nav-toggle")?.addEventListener("click", () =>
     document.querySelector(".nav-links")?.classList.toggle("open"));
 
-  const form = document.getElementById("member-form");
+  const form = document.getElementById("apply-form");
   if (!form) return;
-  const canvas = document.getElementById("member-card");
-  const result = document.getElementById("member-result");
-  let current = null;
+  const panel = document.getElementById("apply-panel");
+  const done = document.getElementById("apply-done");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const f = new FormData(form);
-    const number = memberNumber(f.get("email"));
-    current = {
-      name: f.get("name"), email: f.get("email"),
-      affiliation: f.get("affiliation"), country: f.get("country"),
-      category: f.get("category"), number
-    };
-    try { await document.fonts.load("600 52px Fraunces"); await document.fonts.load("600 18px Inter"); } catch (e) {}
-    await drawCard(canvas, current);
-    document.getElementById("member-no-text").textContent = number;
-    result.classList.add("show");
-    result.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
+    const app = Object.fromEntries(new FormData(form).entries());
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Submitting…";
 
-  document.getElementById("download-card")?.addEventListener("click", () => {
-    if (!current) return;
-    canvas.toBlob((blob) => {
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `sciovia-membership-${current.number}.png`;
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    }, "image/png");
-  });
+    let sent = false;
+    if (APPLY_ENDPOINT) {
+      try {
+        await fetch(APPLY_ENDPOINT, {
+          method: "POST", mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(app)
+        });
+        sent = true;
+      } catch (err) { sent = false; }
+    }
+    if (!sent) {
+      const subject = `Sciovia membership application: ${app.name}`;
+      const body =
+`New membership application for review.
 
-  document.getElementById("register-btn")?.addEventListener("click", () => {
-    if (!current) return;
-    const subject = `Sciovia membership register: ${current.name} (${current.number})`;
-    const body =
-`Please add me to the Sciovia member register.
+Name: ${app.name}
+Email: ${app.email}
+Requested tier: ${app.category}
+Affiliation: ${app.affiliation}
+Country: ${app.country}
+Field / research area: ${app.field}
+Profile / homepage: ${app.profile}
 
-Member No: ${current.number}
-Name: ${current.name}
-Email: ${current.email}
-Affiliation: ${current.affiliation}
-Country: ${current.country}
-Category: ${current.category}
-Joined: ${JOIN_YEAR}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+Why they'd like to join:
+${app.reason || "-"}`;
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+    if (panel) panel.style.display = "none";
+    if (done) { done.style.display = "block"; done.scrollIntoView({ behavior: "smooth", block: "center" }); }
   });
 });

@@ -36,10 +36,10 @@
 <!-- ===== Hero ===== -->
 <section class="hero" style="padding:72px 0 44px;">
   <div class="wrap">
-    <p class="eyebrow">Community membership · Free</p>
-    <h1 style="font-size:clamp(2.2rem,5vw,3.4rem);">Join the Sciovia community.</h1>
-    <p class="lead">Become a member, receive your own member number, and download a personal membership card. Membership is free and open to anyone who cares about research — students, faculty, reviewers, and independent scholars.</p>
-    <div class="hero-actions"><a class="btn btn-primary btn-lg" href="#join">Become a member</a></div>
+    <p class="eyebrow">Community membership · Free · By approval</p>
+    <h1 style="font-size:clamp(2.2rem,5vw,3.4rem);">Apply to join the Sciovia community.</h1>
+    <p class="lead">Membership is free, but curated — we review each application personally to keep the community genuine. Once you're approved, you'll receive a welcome email with your Sciovia ID and your Member Pass.</p>
+    <div class="hero-actions"><a class="btn btn-primary btn-lg" href="#join">Apply for membership</a></div>
   </div>
 </section>
 
@@ -51,7 +51,7 @@
       <h2>Belong to something that serves you.</h2>
     </div>
     <div class="grid grid-3">
-      <div class="card reveal"><div class="ic">🪪</div><h3>Member number &amp; card</h3><p>A unique member number and a downloadable membership card, instantly.</p></div>
+      <div class="card reveal"><div class="ic">🪪</div><h3>Sciovia ID &amp; Member Pass</h3><p>A member number and a personal Member Pass, emailed to you once approved.</p></div>
       <div class="card reveal"><div class="ic">✉️</div><h3>The weekly digest</h3><p>Curated opportunities and guidance delivered every week.</p></div>
       <div class="card reveal"><div class="ic">🤝</div><h3>A shared community</h3><p>Stand alongside researchers who value fair, open knowledge-sharing.</p></div>
       <div class="card reveal"><div class="ic">📇</div><h3>Member directory <span class="badge-soft">planned</span></h3><p>An opt-in directory so members can find and connect with each other.</p></div>
@@ -76,66 +76,50 @@
   </div>
 </section>
 
-<!-- ===== Join form ===== -->
+<!-- ===== Apply ===== -->
 <section class="section band-pine" id="join">
   <div class="wrap">
     <div class="section-head center" style="margin-bottom:30px;">
-      <p class="eyebrow">Become a member</p>
-      <h2>Get your member number &amp; card</h2>
-      <p class="lead" style="margin:0 auto;">Fill in your details to generate your membership card. It's free, and takes a few seconds.</p>
+      <p class="eyebrow">Apply for membership</p>
+      <h2>Submit your application</h2>
+      <p class="lead" style="margin:0 auto;">Membership is by approval. Tell us a little about yourself — we review applications personally, and email your Member Pass once you're approved.</p>
     </div>
 
-    <div class="panel" style="max-width:820px;margin:0 auto;">
-      <form id="member-form">
-        <div class="form-grid">
-          <div class="field full">
-            <label for="m-name">Full name (as it should appear on the card) *</label>
-            <input id="m-name" name="name" type="text" placeholder="e.g. Dr. Aisha Rahman" required>
-          </div>
-          <div class="field">
-            <label for="m-email">Email *</label>
-            <input id="m-email" name="email" type="email" placeholder="you@university.edu" required>
-          </div>
-          <div class="field">
-            <label for="m-cat">Membership category *</label>
-            <select id="m-cat" name="category" required>
-              <option value="">Choose…</option>
-              <option>Explorer</option>
-              <option>Navigator</option>
-              <option>Pathfinder</option>
-              <option>Fellow</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="m-aff">Affiliation / Institution</label>
-            <input id="m-aff" name="affiliation" type="text" placeholder="University / organization">
-          </div>
-          <div class="field">
-            <label for="m-country">Country</label>
-            <input id="m-country" name="country" type="text" placeholder="Country">
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:22px;">
-          <button class="btn btn-gold btn-lg" type="submit">Generate my membership card</button>
-          <span style="color:rgba(255,255,255,.7);font-size:.86rem;">Your card is created on your device — nothing is stored on a server.</span>
-        </div>
-      </form>
+    <div class="grid grid-2" style="gap:36px;align-items:start;max-width:980px;margin:0 auto;">
+      <!-- example pass -->
+      <div>
+        <img src="assets/img/sample-pass.png" alt="Example Sciovia Member Pass" style="width:100%;border-radius:12px;box-shadow:var(--shadow-lg);">
+        <p style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:12px;text-align:center;">Example — the Member Pass emailed to you once approved.</p>
+      </div>
 
-      <!-- Result -->
-      <div class="member-result" id="member-result" style="margin-top:36px;">
-        <div>
-          <canvas id="member-card" aria-label="Your Sciovia membership card"></canvas>
+      <!-- form + confirmation share this column -->
+      <div>
+        <div class="panel" id="apply-panel">
+          <form id="apply-form">
+            <div class="form-grid">
+              <div class="field full"><label for="a-name">Full name *</label><input id="a-name" name="name" type="text" placeholder="e.g. Dr. Aisha Rahman" required></div>
+              <div class="field"><label for="a-email">Email *</label><input id="a-email" name="email" type="email" placeholder="you@university.edu" required></div>
+              <div class="field"><label for="a-cat">Requested tier *</label>
+                <select id="a-cat" name="category" required>
+                  <option value="">Choose…</option>
+                  <option>Explorer</option><option>Navigator</option><option>Pathfinder</option><option>Fellow</option>
+                </select>
+              </div>
+              <div class="field full"><label for="a-aff">Affiliation / Institution *</label><input id="a-aff" name="affiliation" type="text" required></div>
+              <div class="field"><label for="a-country">Country</label><input id="a-country" name="country" type="text"></div>
+              <div class="field"><label for="a-field">Field / research area *</label><input id="a-field" name="field" type="text" placeholder="e.g. Machine learning" required></div>
+              <div class="field full"><label for="a-profile">Profile or homepage (Scholar / ORCID / LinkedIn)</label><input id="a-profile" name="profile" type="url" placeholder="https://…"></div>
+              <div class="field full"><label for="a-reason">Why would you like to join? (optional)</label><textarea id="a-reason" name="reason" placeholder="A sentence or two."></textarea></div>
+            </div>
+            <button class="btn btn-gold btn-lg" type="submit" style="margin-top:20px;">Submit application</button>
+            <p class="form-note" style="margin-top:14px;">We review applications personally. You'll hear from us by email.</p>
+          </form>
         </div>
-        <div>
-          <p class="eyebrow" style="color:var(--gold-soft);">You're a member</p>
-          <h3 style="color:#fff;font-size:1.5rem;margin-bottom:4px;">Welcome to Sciovia.</h3>
-          <p style="color:rgba(255,255,255,.75);margin:0 0 4px;">Your Sciovia ID:</p>
-          <span class="member-no-big" id="member-no-text">SCV-0000-000000</span>
-          <div class="member-actions">
-            <button class="btn btn-gold" id="download-card" type="button">⬇ Download card (PNG)</button>
-            <button class="btn btn-ghost" id="register-btn" type="button" style="color:#fff;border-color:rgba(255,255,255,.4);">Add me to the register</button>
-          </div>
-          <p style="color:rgba(255,255,255,.6);font-size:.82rem;margin-top:16px;">Save your card and number. To be added to the official member register (and the upcoming directory), use “Add me to the register” — it sends your details to the Sciovia team.</p>
+
+        <div class="panel" id="apply-done" style="display:none;text-align:center;">
+          <div style="font-size:2.4rem;margin-bottom:8px;">🧭</div>
+          <h3 style="color:var(--pine);font-size:1.5rem;margin-bottom:8px;">Application received</h3>
+          <p style="color:var(--muted);margin:0;">Thank you for applying to Sciovia. We review every application personally — once you're approved, you'll receive a welcome email with your Sciovia ID and your Member Pass attached.</p>
         </div>
       </div>
     </div>
