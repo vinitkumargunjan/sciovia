@@ -20,14 +20,14 @@ Alternates (use where a functional line fits better than the poetic one):
 - *Helping researchers find their way.*
 - *Direction for the research community.*
 
-## Attribution — the one rule about the founder's name
+## Attribution — the committee, not a person
 
-Dr. Vinit Kumar Gunjan's name appears **only** in one of these two forms, always small and in a footer or byline — never in a headline, never with a photo-led "personal brand" framing:
+Sciovia is presented as the work of a **managing committee**, not any individual. No personal names appear in the public byline. Use one of these forms, always small and in a footer or byline — never in a headline:
 
-- **An initiative by Dr. Vinit Kumar Gunjan**
-- **Curated by Dr. Vinit Kumar Gunjan**
+- **An initiative of the Sciovia Managing Committee**
+- **Curated by the Sciovia Managing Committee**
 
-Sciovia is the subject. The founder is the quiet steward. Credibility is earned through consistent service, not visibility.
+Sciovia is the subject. Credibility is earned through consistent service, not personal visibility. When a team page exists, members may be listed by role (e.g. "Section Editor — Funding"); keep it about the community, not any one person.
 
 ## What Sciovia is — and is not
 

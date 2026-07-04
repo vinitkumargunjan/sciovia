@@ -9,7 +9,7 @@ date: YYYY-MM-DD
 
 *The path of knowing.* · {{ date }}
 
-A short, curated digest for the research community. *An initiative by Dr. Vinit Kumar Gunjan.*
+A short, curated digest for the research community. *An initiative of the Sciovia Managing Committee.*
 
 ---
 
@@ -45,4 +45,4 @@ A short, curated digest for the research community. *An initiative by Dr. Vinit 
 
 *Sciovia is independent and non-commercial. Know of an opportunity worth sharing? Reply and let us know.*
 
-*Curated by Dr. Vinit Kumar Gunjan.*
+*Curated by the Sciovia Managing Committee.*

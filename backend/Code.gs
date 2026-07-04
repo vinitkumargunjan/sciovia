@@ -164,7 +164,7 @@ function welcomeHtml_(name, no, tier, link) {
         'View &amp; download your Member Pass</a></p>' +
       '<p style="color:#5f716f;font-size:12px">If the button does not work, paste this link into your browser:<br>' + link + '</p>' +
       '<p style="margin-top:22px">We are glad to have you with us.</p>' +
-      '<p style="color:#5f716f;font-size:12px;margin-top:20px">An initiative by Dr. Vinit Kumar Gunjan · Independent &amp; non-commercial · teamsciovia@gmail.com</p>' +
+      '<p style="color:#5f716f;font-size:12px;margin-top:20px">An initiative of the Sciovia Managing Committee · Independent &amp; non-commercial · teamsciovia@gmail.com</p>' +
     '</div>' +
   '</div>';
 }

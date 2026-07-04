@@ -4,7 +4,7 @@
 
 An independent initiative that helps the research community discover opportunities — calls for papers, funding, faculty and doctoral positions, conferences, and practical guidance on publishing and research integrity.
 
-**An initiative by Dr. Vinit Kumar Gunjan.**
+**An initiative of the Sciovia Managing Committee.**
 
 Sciovia is not affiliated with any organization. It is a community service: curated, trustworthy, non-commercial.
 
