@@ -1,7 +1,8 @@
 [
   {
     "id": "aaai-27",
-    "category": "Conference",
+    "category": "Conferences & Calls",
+    "type": "Conference · Call for Papers",
     "title": "AAAI-27 — 41st AAAI Conference on Artificial Intelligence",
     "org": "Association for the Advancement of Artificial Intelligence",
     "location": "Montréal, Canada",
@@ -12,7 +13,8 @@
   },
   {
     "id": "ieee-tc-llm",
-    "category": "Call for Papers",
+    "category": "Conferences & Calls",
+    "type": "Journal Special Issue",
     "title": "Special Issue: Large Language Models — IEEE Transactions on Computers",
     "org": "IEEE Computer Society",
     "location": "Online",
@@ -24,6 +26,7 @@
   {
     "id": "msca-pf-2026",
     "category": "Funding",
+    "type": "Fellowship",
     "title": "MSCA Postdoctoral Fellowships 2026 (€399M, ~1,600 awards)",
     "org": "Marie Skłodowska-Curie Actions · European Commission",
     "location": "Europe / Global",
@@ -53,5 +56,16 @@
     "dates": "Rolling · new posts weekly",
     "deadline": "",
     "link": "https://euraxess.ec.europa.eu/jobs/search"
+  },
+  {
+    "id": "anrf-news",
+    "category": "News & Updates",
+    "title": "ANRF is now India's national research funder (subsumes SERB)",
+    "org": "Anusandhan National Research Foundation · Govt. of India",
+    "location": "India",
+    "mode": "",
+    "dates": "Ongoing",
+    "deadline": "",
+    "link": "https://anrfonline.in/"
   }
 ]

@@ -9,13 +9,13 @@
 
 Let **five section editors** — one per category — post and manage opportunities on the live site, each in their own area, without touching code or GitHub. This doubles as the operational structure of the **managing committee**.
 
-| Section (category) | Section Editor |
-|---|---|
-| Conferences | *(admin 1)* |
-| Calls for Papers | *(admin 2)* |
-| Funding | *(admin 3)* |
-| Positions | *(admin 4)* |
-| Internships | *(admin 5)* |
+| Section (category) | Covers | Section Editor |
+|---|---|---|
+| Conferences & Calls | Conference CFPs, special sessions, journal special-issue / publication calls | *(admin 1)* |
+| Funding | Grants, fellowships, funding calls | *(admin 2)* |
+| Positions | Faculty, postdoc, PhD openings | *(admin 3)* |
+| Internships | Research & industry internships | *(admin 4)* |
+| News & Updates | Community announcements & updates | *(admin 5)* |
 
 A **Coordinator** (any committee member) provides light oversight.
 

@@ -12,11 +12,11 @@ const CONTACT_EMAIL = "teamsciovia@gmail.com";
 const CONTACT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyI3mg-sZR5uYdGHDl3t4VvU8raiJHjLEzSSuRPiENBt9bOmZ5Bz0_6fQAVXvt7RXI2Gg/exec";
 
 const CAT_SLUG = {
-  "Conference": "conference",
-  "Call for Papers": "cfp",
+  "Conferences & Calls": "calls",
   "Funding": "funding",
   "Position": "position",
-  "Internship": "internship"
+  "Internship": "internship",
+  "News & Updates": "news"
 };
 
 /* ---------- helpers ---------- */
@@ -32,23 +32,30 @@ function fmtDeadline(iso) {
 }
 
 function eventCard(ev) {
-  const slug = CAT_SLUG[ev.category] || "conference";
-  const dl = fmtDeadline(ev.deadline);
+  const slug = CAT_SLUG[ev.category] || "calls";
+  const tagLabel = ev.type || ev.category;   // sub-type (e.g. "Journal Special Issue") or the category
   const meta = [
     ev.location ? `<span title="Location">📍 ${esc(ev.location)}</span>` : "",
     ev.mode ? `<span title="Mode">🖥 ${esc(ev.mode)}</span>` : "",
     ev.dates ? `<span title="Dates">🗓 ${esc(ev.dates)}</span>` : ""
   ].join("");
+  let dlHtml = "";
+  if (ev.deadline) {
+    const dl = fmtDeadline(ev.deadline);
+    dlHtml = `<span class="deadline ${dl.soon ? "soon" : ""}">Deadline: ${dl.text}</span>`;
+  } else if (ev.category !== "News & Updates") {
+    dlHtml = `<span class="deadline">Open</span>`;
+  }
   return el(`
     <article class="ev-card reveal" data-cat="${esc(ev.category)}" data-search="${esc((ev.title + " " + ev.org + " " + ev.location).toLowerCase())}">
       <div class="ev-top">
-        <span class="tag tag--${slug}">${esc(ev.category)}</span>
+        <span class="tag tag--${slug}">${esc(tagLabel)}</span>
       </div>
       <h3>${esc(ev.title)}</h3>
       <p class="ev-org">${esc(ev.org)}</p>
       <div class="ev-meta">${meta}</div>
       <div class="ev-foot">
-        <span class="deadline ${dl.soon ? "soon" : ""}">Deadline: ${dl.text}</span>
+        ${dlHtml}
         <a class="ev-link" href="${esc(ev.link)}" target="_blank" rel="noopener">Details →</a>
       </div>
     </article>

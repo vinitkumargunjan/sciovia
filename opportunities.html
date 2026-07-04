@@ -39,7 +39,7 @@
   <div class="wrap">
     <p class="eyebrow">Opportunities</p>
     <h1 style="font-size:clamp(2.2rem,5vw,3.4rem);">Opportunities, curated for you.</h1>
-    <p class="lead">Conferences, calls for papers, funding, positions, and internships — sorted by nearest deadline. Found something worth sharing? <a href="#list">List it below.</a></p>
+    <p class="lead">Conference &amp; journal calls, funding, positions, internships, and community news — sorted by nearest deadline. Found something worth sharing? <a href="#list">List it below.</a></p>
   </div>
 </section>
 
@@ -49,11 +49,11 @@
     <div class="ev-toolbar">
       <div class="tabs">
         <button class="tab active" data-cat="All">All</button>
-        <button class="tab" data-cat="Conference">Conferences</button>
-        <button class="tab" data-cat="Call for Papers">Calls for Papers</button>
+        <button class="tab" data-cat="Conferences &amp; Calls">Conferences &amp; Calls</button>
         <button class="tab" data-cat="Funding">Funding</button>
         <button class="tab" data-cat="Position">Positions</button>
         <button class="tab" data-cat="Internship">Internships</button>
+        <button class="tab" data-cat="News &amp; Updates">News &amp; Updates</button>
       </div>
       <label class="search">
         <span aria-hidden="true">🔍</span>
@@ -72,7 +72,7 @@
     <div class="section-head center" style="margin-bottom:30px;">
       <p class="eyebrow">Share an opportunity</p>
       <h2>List an event</h2>
-      <p class="lead" style="margin:0 auto;">Add a conference, call for papers, grant, or position. We review each submission for accuracy before it appears — accurate, well-linked entries help everyone.</p>
+      <p class="lead" style="margin:0 auto;">Add a conference or journal call, grant, position, internship, or a community update. We review each submission for accuracy before it appears — accurate, well-linked entries help everyone.</p>
     </div>
 
     <div class="panel" style="max-width:820px;margin:0 auto;">
@@ -82,11 +82,15 @@
             <label for="f-cat">Type *</label>
             <select id="f-cat" name="category" required>
               <option value="">Choose…</option>
-              <option>Conference</option>
-              <option>Call for Papers</option>
+              <optgroup label="Conferences &amp; Calls">
+                <option>Conference — Call for Papers</option>
+                <option>Conference — Special Session</option>
+                <option>Journal Special Issue / Publication Call</option>
+              </optgroup>
               <option>Funding</option>
               <option>Position</option>
               <option>Internship</option>
+              <option>News &amp; Update</option>
             </select>
           </div>
           <div class="field">
