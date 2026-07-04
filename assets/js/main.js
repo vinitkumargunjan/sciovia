@@ -8,6 +8,8 @@
 // Where "List an event" and "Subscribe" submissions are sent.
 // Change this to a dedicated address (e.g. hello@sciovia.org) once available.
 const CONTACT_EMAIL = "teamsciovia@gmail.com";
+// Same Google Apps Script endpoint as membership; contact messages are sent with type:"contact".
+const CONTACT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyI3mg-sZR5uYdGHDl3t4VvU8raiJHjLEzSSuRPiENBt9bOmZ5Bz0_6fQAVXvt7RXI2Gg/exec";
 
 const CAT_SLUG = {
   "Conference": "conference",
@@ -170,6 +172,30 @@ function observeReveals() {
   document.querySelectorAll(".reveal:not(.in)").forEach(n => revealObserver.observe(n));
 }
 
+/* ---------- contact form ---------- */
+function wireContact() {
+  const form = document.getElementById("contact-form");
+  if (!form) return;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const payload = Object.fromEntries(new FormData(form).entries());
+    payload.type = "contact";
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Sending…";
+    try {
+      await fetch(CONTACT_ENDPOINT, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) { /* opaque no-cors response; assume delivered */ }
+    document.getElementById("contact-panel").style.display = "none";
+    const done = document.getElementById("contact-done");
+    done.style.display = "block";
+    done.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+}
+
 /* ---------- mobile nav ---------- */
 function wireNav() {
   const btn = document.querySelector(".nav-toggle");
@@ -185,4 +211,5 @@ document.addEventListener("DOMContentLoaded", () => {
   loadEvents();
   wireEventForm();
   wireSubscribe();
+  wireContact();
 });

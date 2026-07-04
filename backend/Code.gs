@@ -14,6 +14,7 @@
  */
 
 var SHEET_NAME = 'Applications';
+var MESSAGES_SHEET = 'Messages';
 var CARD_BASE  = 'https://vinitkumargunjan.github.io/sciovia/card.html';
 var TEAM_EMAIL = 'teamsciovia@gmail.com';
 var FROM_NAME  = 'Sciovia';
@@ -32,10 +33,11 @@ function sheet_() {
   return sh;
 }
 
-/** The website posts applications to this endpoint (JSON body). */
+/** The website posts applications (and contact messages) to this endpoint. */
 function doPost(e) {
   try {
     var d = JSON.parse(e.postData.contents);
+    if (d.type === 'contact') return handleContact_(d);
     sheet_().appendRow([
       new Date(), d.name || '', d.email || '', d.category || '',
       d.affiliation || '', d.country || '', d.field || '', d.profile || '',
@@ -55,6 +57,30 @@ function doGet() {
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Contact-form messages -> a Messages sheet + an email to the team. */
+function messagesSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(MESSAGES_SHEET);
+  if (!sh) {
+    sh = ss.insertSheet(MESSAGES_SHEET);
+    sh.appendRow(['Timestamp', 'Name', 'Email', 'Subject', 'Message']);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function handleContact_(d) {
+  messagesSheet_().appendRow([new Date(), d.name || '', d.email || '', d.subject || '', d.message || '']);
+  MailApp.sendEmail({
+    to: TEAM_EMAIL,
+    name: FROM_NAME,
+    replyTo: d.email || TEAM_EMAIL,
+    subject: 'Sciovia contact: ' + (d.subject || '(no subject)'),
+    body: 'From: ' + (d.name || '') + ' <' + (d.email || '') + '>\n\n' + (d.message || '')
+  });
+  return json_({ ok: true });
 }
 
 /** Adds the Sciovia menu when the sheet opens. */
