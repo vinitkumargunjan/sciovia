@@ -136,7 +136,7 @@ This structure *is* the managing committee in practice: five Section Editors + a
 | Conferences & Calls | Dr Fahimuddin Shaik | fahimaits@gmail.com |
 | Funding | Dr Ninni Singh | ninnisingh1991@gmail.com |
 | Positions | Dr Radhakrishna Karne | krk.wgl@gmail.com |
-| Internships | Dr Vijender Kumar Solanki | spesinfo@yahoo.com |
+| Internships | Dr Vijender Kumar Solanki | spesinfo@gmail.com |
 | News & Updates | Dr Vinit Kumar Gunjan | vinitkumargunjan@gmail.com |
 
 ### Setup (one time, in the teamsciovia account)
