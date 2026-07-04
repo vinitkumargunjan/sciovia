@@ -10,6 +10,9 @@
 const CONTACT_EMAIL = "teamsciovia@gmail.com";
 // Same Google Apps Script endpoint as membership; contact messages are sent with type:"contact".
 const CONTACT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyI3mg-sZR5uYdGHDl3t4VvU8raiJHjLEzSSuRPiENBt9bOmZ5Bz0_6fQAVXvt7RXI2Gg/exec";
+// Opportunities are read live from the section-editor Google Sheet (via the same script);
+// if the service is unreachable or empty, the site falls back to assets/data/events.json.
+const OPP_ENDPOINT = CONTACT_ENDPOINT + "?type=opportunities";
 
 const CAT_SLUG = {
   "Conferences & Calls": "calls",
@@ -70,9 +73,16 @@ async function loadEvents() {
 
   let events = [];
   try {
-    const res = await fetch("assets/data/events.json", { cache: "no-store" });
-    events = await res.json();
-  } catch (e) { events = []; }
+    const res = await fetch(OPP_ENDPOINT, { cache: "no-store" });
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) events = data;
+    else throw new Error("empty");
+  } catch (e) {
+    try {
+      const res = await fetch("assets/data/events.json", { cache: "no-store" });
+      events = await res.json();
+    } catch (e2) { events = []; }
+  }
 
   // sort by nearest deadline
   events.sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999"));

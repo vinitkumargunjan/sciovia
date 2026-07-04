@@ -126,3 +126,28 @@ Either way, no editor can publish outside their section, and the Coordinator can
 This structure *is* the managing committee in practice: five Section Editors + a Coordinator, all working under the Sciovia name with no personal bylines on the public site. It distributes the work, makes the initiative sustainable beyond any one person, and reads as an established, community-run body.
 
 *Optional future extensions: public "submit an opportunity" queue feeding an editor's review; a member directory; analytics on most-viewed listings.*
+
+---
+
+## 11. Implementation — the section editors
+
+| Section tab | Section Editor | Email |
+|---|---|---|
+| Conferences & Calls | Dr Fahimuddin Shaik | fahimaits@gmail.com |
+| Funding | Dr Ninni Singh | ninnisingh1991@gmail.com |
+| Positions | Dr Radhakrishna Karne | krk.wgl@gmail.com |
+| Internships | Dr Vijender Kumar Solanki | spesinfo@yahoo.com |
+| News & Updates | Dr Vinit Kumar Gunjan | vinitkumargunjan@gmail.com |
+
+### Setup (one time, in the teamsciovia account)
+
+1. **Update the script** — paste the latest `backend/Code.gs` into Apps Script and save.
+2. **Redeploy** — Deploy → Manage deployments → ✏️ → New version → Deploy (same URL).
+3. **Create the sheet** — reload the *Sciovia Members* sheet → menu **Sciovia → Set up Opportunities sheet**. This creates a new **"Sciovia Opportunities"** spreadsheet with the five section tabs (seeded with the current listings) and shows its link. Authorize if prompted.
+4. **Share** — open that new sheet → **Share** → add each editor's email as **Editor**.
+5. **Scope each tab** — for every tab: **Data → Protect sheet and ranges → Set permissions →** allow only that section's editor (and the owner) to edit.
+
+### How editors post
+Open the *Sciovia Opportunities* sheet → their tab → add a row (Title, Organization, Deadline, Link, Type if relevant) → tick **Published**. It appears on the website within a minute.
+
+**Columns:** Title · Type · Organization · Location · Mode · Dates · Deadline · Link · Published (checkbox) · Added by.
