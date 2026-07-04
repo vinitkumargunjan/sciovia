@@ -43,7 +43,6 @@ function eventCard(ev) {
     <article class="ev-card reveal" data-cat="${esc(ev.category)}" data-search="${esc((ev.title + " " + ev.org + " " + ev.location).toLowerCase())}">
       <div class="ev-top">
         <span class="tag tag--${slug}">${esc(ev.category)}</span>
-        ${ev.sample ? '<span style="font-size:.7rem;color:#a88;">sample</span>' : ''}
       </div>
       <h3>${esc(ev.title)}</h3>
       <p class="ev-org">${esc(ev.org)}</p>
