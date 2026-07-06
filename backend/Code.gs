@@ -51,6 +51,7 @@ function doPost(e) {
     if (d.type === 'contact') return handleContact_(d);
     if (d.type === 'subscribe') return handleSubscribe_(d);
     if (d.type === 'submission') return handleSubmission_(d);
+    if (d.type === 'nomination') return handleNomination_(d);
     return handleApplication_(d);
   } catch (err) {
     return json_({ ok: false, error: String(err) });
@@ -97,6 +98,13 @@ function handleSubscribe_(d) {
 function handleSubmission_(d) {
   tab_('Submissions', ['Timestamp', 'Type', 'Title', 'Organization', 'Location', 'Mode', 'Dates', 'Deadline', 'Link', 'Submitter', 'Email', 'Notes'])
     .appendRow([new Date(), d.category || '', d.title || '', d.org || '', d.location || '', d.mode || '', d.dates || '', d.deadline || '', d.link || '', d.name || '', d.email || '', d.notes || '']);
+  return json_({ ok: true });
+}
+
+/** Awards nomination -> Nominations tab. */
+function handleNomination_(d) {
+  tab_('Nominations', ['Timestamp', 'Award', 'Nominee', 'Affiliation', 'Reason', 'Link', 'Nominator', 'Nominator email', 'Nominator member no'])
+    .appendRow([new Date(), d.award || '', d.nominee || '', d.affiliation || '', d.reason || '', d.link || '', d.name || '', d.email || '', d.memberNo || '']);
   return json_({ ok: true });
 }
 

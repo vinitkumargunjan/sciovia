@@ -146,16 +146,54 @@
 
 <!-- ===== Nominate ===== -->
 <section class="section band-pine" id="nominate">
-  <div class="wrap center" style="max-width:720px;">
-    <div style="font-size:2.4rem;margin-bottom:8px;">✨</div>
-    <p class="eyebrow">Nominations</p>
-    <h2>Know someone whose work deserves recognition?</h2>
-    <p class="lead" style="margin:0 auto;">The inaugural Sciovia Awards are being planned. Nominate a researcher — or register your interest to be notified when nominations open.</p>
-    <div class="hero-actions" style="justify-content:center;margin-top:26px;">
-      <a class="btn btn-gold btn-lg" href="mailto:hello@sciovia.org?subject=Sciovia%20Awards%20%E2%80%94%20Nomination&body=Award%20(which%20one)%3A%0AName%20of%20nominee%3A%0AAffiliation%3A%0AWhy%20they%20deserve%20it%20(a%20few%20lines)%3A%0ALink%20to%20their%20work%2Fprofile%3A%0A%0AYour%20name%3A%0AYour%20email%3A">Submit a nomination</a>
-      <a class="btn btn-ghost btn-lg" href="about.html#contact" style="color:#fff;border-color:rgba(255,255,255,.4);">Register interest</a>
+  <div class="wrap">
+    <div class="section-head center" style="margin-bottom:30px;">
+      <div style="font-size:2.4rem;margin-bottom:8px;">✨</div>
+      <p class="eyebrow">Nominations</p>
+      <h2>Submit a nomination</h2>
+      <p class="lead" style="margin:0 auto;">Sciovia members may nominate a researcher for any award. Every nomination is reviewed by the awards panel on merit.</p>
     </div>
-    <p style="color:rgba(255,255,255,.6);font-size:.84rem;margin-top:18px;">Nominations open ahead of each annual cycle · hello@sciovia.org</p>
+
+    <div class="panel" style="max-width:760px;margin:0 auto;">
+      <div id="nom-panel">
+        <form id="nomination-form">
+          <div class="form-grid">
+            <div class="field">
+              <label for="n-award">Award *</label>
+              <select id="n-award" name="award" required>
+                <option value="">Choose…</option>
+                <optgroup label="Annual honours">
+                  <option>Researcher of the Year</option>
+                  <option>Emerging Researcher Award</option>
+                  <option>Lifetime Achievement Award</option>
+                  <option>Research Excellence Award</option>
+                  <option>Research Impact Award</option>
+                  <option>Distinguished Mentor Award</option>
+                </optgroup>
+                <optgroup label="Awards of the Month">
+                  <option>Research Award of the Month</option>
+                  <option>Teaching Award of the Month</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="field"><label for="n-memno">Your Sciovia membership number *</label><input id="n-memno" name="memberNo" type="text" placeholder="SCV-2026-000000" pattern="SCV-\d{4}-\d{6}" title="Format: SCV-2026-000000" required></div>
+            <div class="field full"><label for="n-nominee">Nominee's full name *</label><input id="n-nominee" name="nominee" type="text" required></div>
+            <div class="field"><label for="n-aff">Nominee's affiliation</label><input id="n-aff" name="affiliation" type="text"></div>
+            <div class="field"><label for="n-link">Link to their work / profile</label><input id="n-link" name="link" type="url" placeholder="https://…"></div>
+            <div class="field full"><label for="n-reason">Why do they deserve it? *</label><textarea id="n-reason" name="reason" style="min-height:110px;" required></textarea></div>
+            <div class="field"><label for="n-name">Your name *</label><input id="n-name" name="name" type="text" required></div>
+            <div class="field"><label for="n-email">Your email *</label><input id="n-email" name="email" type="email" required></div>
+          </div>
+          <button class="btn btn-gold btn-lg" type="submit" style="margin-top:20px;">Submit nomination</button>
+          <p class="form-note" style="margin-top:14px;">Only Sciovia members may nominate — your membership number is required. Not a member yet? <a href="membership.html#join" style="color:var(--gold-soft);">Apply here</a>.</p>
+        </form>
+      </div>
+      <div class="panel" id="nom-done" style="display:none;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:8px;">🏆</div>
+        <h3 style="color:var(--pine);font-size:1.4rem;margin-bottom:8px;">Nomination received</h3>
+        <p style="color:var(--muted);margin:0;">Thank you — your nomination has been submitted to the awards panel for review.</p>
+      </div>
+    </div>
   </div>
 </section>
 

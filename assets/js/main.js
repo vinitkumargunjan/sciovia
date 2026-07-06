@@ -216,6 +216,30 @@ function wireContact() {
   });
 }
 
+/* ---------- awards nomination form (-> backend "Nominations") ---------- */
+function wireNomination() {
+  const form = document.getElementById("nomination-form");
+  if (!form) return;
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const payload = Object.fromEntries(new FormData(form).entries());
+    payload.type = "nomination";
+    const btn = form.querySelector("button[type=submit]");
+    if (btn) { btn.disabled = true; btn.textContent = "Submitting…"; }
+    try {
+      await fetch(CONTACT_ENDPOINT, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) { /* opaque no-cors response; assume received */ }
+    document.getElementById("nom-panel").style.display = "none";
+    const done = document.getElementById("nom-done");
+    done.style.display = "block";
+    done.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+}
+
 /* ---------- mobile nav ---------- */
 function wireNav() {
   const btn = document.querySelector(".nav-toggle");
@@ -232,4 +256,5 @@ document.addEventListener("DOMContentLoaded", () => {
   wireEventForm();
   wireSubscribe();
   wireContact();
+  wireNomination();
 });
