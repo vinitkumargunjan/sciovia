@@ -394,25 +394,38 @@ function fetchSuggestions() {
     sug.getRange(2, 4, sug.getLastRow() - 1, 1).getValues().forEach(function (r) { if (r[0]) seen[String(r[0]).trim()] = 1; });
   }
   var feedRows = feeds.getLastRow() > 1 ? feeds.getRange(2, 1, feeds.getLastRow() - 1, 3).getValues() : [];
-  var newRows = [];
+  var newRows = [], diag = [];
   feedRows.forEach(function (fr) {
-    var section = fr[0], url = String(fr[1] || '').trim(), source = fr[2] || '';
+    var section = fr[0], url = String(fr[1] || '').trim(), source = String(fr[2] || 'feed');
     if (!url) return;
     try {
-      parseFeed_(url).slice(0, 15).forEach(function (it) {
+      var f = fetchFeed_(url);
+      var items = parseFeedBody_(f.body);
+      diag.push(source + ' -> http ' + f.code + ', ' + items.length + ' items');
+      items.slice(0, 15).forEach(function (it) {
         if (it.link && !seen[it.link]) { seen[it.link] = 1; newRows.push([new Date(), section, it.title, it.link, source]); }
       });
-    } catch (e) { /* skip a broken feed */ }
+    } catch (e) { diag.push(source + ' -> ERROR: ' + e); }
   });
   if (newRows.length) sug.getRange(sug.getLastRow() + 1, 1, newRows.length, 5).setValues(newRows);
-  maybeAlert_(newRows.length + ' new suggestion(s) added to the "Suggestions" tab for review.');
+  var msg = newRows.length + ' new suggestion(s) added to the "Suggestions" tab.';
+  if (newRows.length === 0) msg += '\n\nDiagnostics per feed:\n' + (diag.join('\n') || '(no feeds found in the Feeds tab)');
+  maybeAlert_(msg);
   try { sug.activate(); } catch (e) {}
 }
 
+function fetchFeed_(url) {
+  var res = UrlFetchApp.fetch(url, {
+    muteHttpExceptions: true, followRedirects: true,
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ScioviaBot/1.0; +https://sciovia.org)' }
+  });
+  return { code: res.getResponseCode(), body: res.getContentText() };
+}
+
 // Tolerant RSS/Atom parser (regex-based, so it survives feeds that aren't strict XML).
-function parseFeed_(url) {
-  var body = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true }).getContentText();
-  var blocks = body.match(/<item[\s\S]*?<\/item>/gi) || body.match(/<entry[\s\S]*?<\/entry>/gi) || [];
+function parseFeedBody_(body) {
+  var s = String(body || '');
+  var blocks = s.match(/<item[\s\S]*?<\/item>/gi) || s.match(/<entry[\s\S]*?<\/entry>/gi) || [];
   var out = [];
   blocks.forEach(function (b) {
     var tm = b.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
