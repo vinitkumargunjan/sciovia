@@ -433,7 +433,7 @@ function processApplications() {
 
 function declineHtml_(name, reason) {
   var reasonBlock = reason
-    ? '<p style="background:#f7f0f2;border-left:3px solid #b0516a;padding:12px 16px;border-radius:6px"><strong>Note:</strong> ' + esc_(reason) + '</p>'
+    ? '<p style="background:#f7f0f2;border-left:3px solid #b0516a;padding:12px 16px;border-radius:6px"><strong>Note from the Committee:</strong> ' + esc_(reason) + '</p>'
     : '';
   return '' +
   '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;color:#1a2a2a">' +
@@ -443,12 +443,14 @@ function declineHtml_(name, reason) {
     '</div>' +
     '<div style="border:1px solid #e7e1d5;border-top:none;border-radius:0 0 12px 12px;padding:28px 30px">' +
       '<p>Dear ' + esc_(name) + ',</p>' +
-      '<p>Thank you for your interest in joining the Sciovia community. After careful review, we are unable to approve your membership at this time.</p>' +
+      '<p>Thank you for your interest in becoming a member of the Sciovia research community, and for the time you took to apply.</p>' +
+      '<p>After careful consideration, the Managing Committee is unable to approve your membership at this time.</p>' +
       reasonBlock +
-      '<p>This is not a judgement of your work — we simply keep membership aligned with our current focus, and you are warmly welcome to apply again in future.</p>' +
-      '<p>Meanwhile, everything Sciovia offers — the weekly digest, opportunities, and awards — remains free and open to you at <a href="https://sciovia.org">sciovia.org</a>.</p>' +
-      '<p style="margin-top:22px">With appreciation,<br>The Sciovia Managing Committee</p>' +
-      '<p style="color:#5f716f;font-size:12px;margin-top:20px">Independent &amp; non-commercial · hello@sciovia.org</p>' +
+      '<p>Please be assured this is not a reflection of your abilities or standing as a researcher. Membership is assessed against our current criteria and focus, which continue to evolve as the community grows.</p>' +
+      '<p><strong>You are warmly invited to submit a fresh application after 180 days</strong>, and the Committee will be glad to review it again.</p>' +
+      '<p>In the meantime, everything Sciovia offers — the weekly digest, the opportunities directory, and the Sciovia Awards — remains completely free and open to you at <a href="https://sciovia.org">sciovia.org</a>.</p>' +
+      '<p style="margin-top:22px">With appreciation and warm regards,<br>The Sciovia Managing Committee</p>' +
+      '<p style="color:#5f716f;font-size:12px;margin-top:20px">Independent &amp; non-commercial · <a href="mailto:hello@sciovia.org" style="color:#5f716f">hello@sciovia.org</a></p>' +
     '</div>' +
   '</div>';
 }
@@ -462,7 +464,7 @@ function welcomeHtml_(name, no, tier, link) {
     '</div>' +
     '<div style="border:1px solid #e7e1d5;border-top:none;border-radius:0 0 12px 12px;padding:28px 30px">' +
       '<p>Dear ' + esc_(name) + ',</p>' +
-      '<p>Welcome to the Sciovia community — your application has been approved.</p>' +
+      '<p>It is our pleasure to welcome you to the Sciovia research community. Following review by the Managing Committee, your application has been <strong>approved</strong>.</p>' +
       '<p style="background:#f4f5f3;border-left:3px solid #14524b;padding:12px 16px;border-radius:6px">' +
         '<strong>Sciovia ID:</strong> ' + no + '<br>' +
         '<strong>Standing:</strong> ' + esc_(tier) +
@@ -472,8 +474,17 @@ function welcomeHtml_(name, no, tier, link) {
         'text-decoration:none;padding:12px 24px;border-radius:999px;font-weight:bold">' +
         'View &amp; download your Member Pass</a></p>' +
       '<p style="color:#5f716f;font-size:12px">If the button does not work, paste this link into your browser:<br>' + link + '</p>' +
-      '<p style="margin-top:22px">We are glad to have you with us.</p>' +
-      '<p style="color:#5f716f;font-size:12px;margin-top:20px">An initiative of the Sciovia Managing Committee · Independent &amp; non-commercial · hello@sciovia.org</p>' +
+      '<p style="margin-top:20px"><strong>As a Sciovia member, you enjoy:</strong></p>' +
+      '<ul style="margin:6px 0 0;padding-left:20px;color:#333;line-height:1.7">' +
+        '<li>Your personal <strong>Member Pass</strong> — a digital credential carrying your unique Sciovia ID.</li>' +
+        '<li>The <strong>weekly Sciovia digest</strong> — curated calls for papers, funding, positions, and internships, delivered to your inbox.</li>' +
+        '<li>The privilege to <strong>nominate outstanding researchers</strong> for the Sciovia Awards.</li>' +
+        '<li>The ability to <strong>nominate colleagues</strong> for fast-track membership.</li>' +
+        '<li>Standing within a community devoted to fair, open, and ethical research.</li>' +
+      '</ul>' +
+      '<p style="margin-top:22px">We are delighted to have you with us, and we look forward to supporting your research journey.</p>' +
+      '<p>Warm regards,<br>The Sciovia Managing Committee</p>' +
+      '<p style="color:#5f716f;font-size:12px;margin-top:20px">An initiative of the Sciovia Managing Committee · Independent &amp; non-commercial · <a href="mailto:hello@sciovia.org" style="color:#5f716f">hello@sciovia.org</a></p>' +
     '</div>' +
   '</div>';
 }
