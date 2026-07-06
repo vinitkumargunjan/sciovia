@@ -7,7 +7,7 @@
 
 // Where "List an event" and "Subscribe" submissions are sent.
 // Change this to a dedicated address (e.g. hello@sciovia.org) once available.
-const CONTACT_EMAIL = "teamsciovia@gmail.com";
+const CONTACT_EMAIL = "hello@sciovia.org";
 // Same Google Apps Script endpoint as membership; contact messages are sent with type:"contact".
 const CONTACT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyI3mg-sZR5uYdGHDl3t4VvU8raiJHjLEzSSuRPiENBt9bOmZ5Bz0_6fQAVXvt7RXI2Gg/exec";
 // Opportunities are read live from the section-editor Google Sheet (via the same script);
@@ -133,46 +133,50 @@ function wireFilters() {
   search?.addEventListener("input", apply);
 }
 
-/* ---------- list-an-event form ---------- */
+/* ---------- list-an-event form (public submissions -> backend "Submissions") ---------- */
 function wireEventForm() {
   const form = document.getElementById("event-form");
   if (!form) return;
-  form.addEventListener("submit", e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
-    const f = new FormData(form);
-    const subject = `Sciovia — Event submission: ${f.get("title")}`;
-    const body =
-`Please consider this listing for Sciovia.
-
-Type: ${f.get("category")}
-Title: ${f.get("title")}
-Organization: ${f.get("org")}
-Location / Mode: ${f.get("location")} (${f.get("mode")})
-Dates: ${f.get("dates")}
-Deadline: ${f.get("deadline")}
-Link: ${f.get("link")}
-
-Submitted by: ${f.get("name")} (${f.get("email")})
-
-Notes:
-${f.get("notes") || "-"}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const payload = Object.fromEntries(new FormData(form).entries());
+    payload.type = "submission";
+    const btn = form.querySelector("button[type=submit]");
+    if (btn) { btn.disabled = true; btn.textContent = "Submitting…"; }
+    try {
+      await fetch(CONTACT_ENDPOINT, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) { /* opaque no-cors response; assume received */ }
+    form.reset();
+    if (btn) { btn.disabled = false; btn.textContent = "Submit for review"; }
     const ok = document.getElementById("form-status");
-    if (ok) { ok.textContent = "Thank you — your email app should open with the details ready to send."; ok.style.display = "block"; }
+    if (ok) { ok.textContent = "Thank you — your submission has been received for review."; ok.style.display = "block"; }
   });
 }
 
-/* ---------- subscribe form ---------- */
+/* ---------- subscribe form (-> backend "Subscribers" list) ---------- */
 function wireSubscribe() {
   document.querySelectorAll(".subscribe-form").forEach(form => {
-    form.addEventListener("submit", e => {
+    form.addEventListener("submit", async e => {
       e.preventDefault();
-      const email = form.querySelector("input[type=email]").value;
-      const subject = "Subscribe to Sciovia";
-      const body = `Please add this address to the Sciovia weekly digest:\n\n${email}`;
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const emailInput = form.querySelector("input[type=email]");
+      const email = emailInput ? emailInput.value : "";
+      const btn = form.querySelector("button[type=submit]");
+      if (btn) { btn.disabled = true; btn.textContent = "Subscribing…"; }
+      try {
+        await fetch(CONTACT_ENDPOINT, {
+          method: "POST", mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ type: "subscribe", email: email, source: "website" })
+        });
+      } catch (err) { /* opaque no-cors response; assume received */ }
+      form.reset();
+      if (btn) { btn.disabled = false; btn.textContent = "Subscribe"; }
       const note = form.parentElement.querySelector(".sub-status");
-      if (note) { note.textContent = "Thanks! Confirm the email that just opened and you'll be added."; note.style.display = "block"; }
+      if (note) { note.textContent = "Thank you — you're subscribed. We'll be in touch."; note.style.display = "block"; }
     });
   });
 }

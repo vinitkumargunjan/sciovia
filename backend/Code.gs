@@ -49,6 +49,8 @@ function doPost(e) {
   try {
     var d = JSON.parse(e.postData.contents);
     if (d.type === 'contact') return handleContact_(d);
+    if (d.type === 'subscribe') return handleSubscribe_(d);
+    if (d.type === 'submission') return handleSubmission_(d);
     sheet_().appendRow([
       new Date(), d.name || '', d.email || '', d.category || '',
       d.affiliation || '', d.country || '', d.field || '', d.profile || '',
@@ -81,6 +83,26 @@ function messagesSheet_() {
     sh.setFrozenRows(1);
   }
   return sh;
+}
+
+/** Newsletter subscribers -> a Subscribers sheet. */
+function tab_(name, headers) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(name);
+  if (!sh) { sh = ss.insertSheet(name); sh.appendRow(headers); sh.setFrozenRows(1); }
+  return sh;
+}
+
+function handleSubscribe_(d) {
+  tab_('Subscribers', ['Timestamp', 'Email', 'Source']).appendRow([new Date(), d.email || '', d.source || 'website']);
+  return json_({ ok: true });
+}
+
+/** Public "list an event" submissions -> a Submissions sheet (for an editor to review). */
+function handleSubmission_(d) {
+  tab_('Submissions', ['Timestamp', 'Type', 'Title', 'Organization', 'Location', 'Mode', 'Dates', 'Deadline', 'Link', 'Submitter', 'Email', 'Notes'])
+    .appendRow([new Date(), d.category || '', d.title || '', d.org || '', d.location || '', d.mode || '', d.dates || '', d.deadline || '', d.link || '', d.name || '', d.email || '', d.notes || '']);
+  return json_({ ok: true });
 }
 
 function handleContact_(d) {
@@ -270,7 +292,7 @@ function welcomeHtml_(name, no, tier, link) {
         'View &amp; download your Member Pass</a></p>' +
       '<p style="color:#5f716f;font-size:12px">If the button does not work, paste this link into your browser:<br>' + link + '</p>' +
       '<p style="margin-top:22px">We are glad to have you with us.</p>' +
-      '<p style="color:#5f716f;font-size:12px;margin-top:20px">An initiative of the Sciovia Managing Committee · Independent &amp; non-commercial · teamsciovia@gmail.com</p>' +
+      '<p style="color:#5f716f;font-size:12px;margin-top:20px">An initiative of the Sciovia Managing Committee · Independent &amp; non-commercial · hello@sciovia.org</p>' +
     '</div>' +
   '</div>';
 }
