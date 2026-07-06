@@ -188,9 +188,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const panel = document.getElementById("apply-panel");
   const done = document.getElementById("apply-done");
 
+  // Application mode: "self" or a member "nominate" (fast-track).
+  const nominatorWrap = document.getElementById("nominator-wrap");
+  const nominatorInput = document.getElementById("a-nomby");
+  const refWrap = document.getElementById("ref-wrap");
+  function updateMode() {
+    const checked = form.querySelector('input[name="mode"]:checked');
+    const nominate = checked && checked.value === "nominate";
+    if (nominatorWrap) nominatorWrap.style.display = nominate ? "" : "none";
+    if (nominatorInput) nominatorInput.required = !!nominate;
+    if (refWrap) refWrap.style.display = nominate ? "none" : "";
+  }
+  form.querySelectorAll('input[name="mode"]').forEach(function (r) { r.addEventListener("change", updateMode); });
+  updateMode();
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const app = Object.fromEntries(new FormData(form).entries());
+    // A member nominating someone -> record their ID as the referral (fast-track flag).
+    if (app.mode === "nominate" && app.nominatorMemberNo) {
+      app.referredBy = app.nominatorMemberNo + " (member nomination)";
+    }
     const btn = form.querySelector("button[type=submit]");
     btn.disabled = true; btn.textContent = "Submitting…";
 

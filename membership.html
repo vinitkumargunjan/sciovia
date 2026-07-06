@@ -92,7 +92,7 @@
     <div class="section-head center" style="margin-bottom:30px;">
       <p class="eyebrow">Apply for membership</p>
       <h2>Submit your application</h2>
-      <p class="lead" style="margin:0 auto;">Membership is by approval. Every application is reviewed personally — and if a current member referred you, mention them below for a faster review. We'll email your Member Pass once you're approved.</p>
+      <p class="lead" style="margin:0 auto;">Membership is by approval. Apply for yourself — or, if you're a Sciovia member, nominate someone for fast-track membership. Every application is reviewed personally; we'll email the Member Pass once approved.</p>
     </div>
 
     <div class="grid grid-2" style="gap:36px;align-items:start;max-width:980px;margin:0 auto;">
@@ -107,6 +107,18 @@
         <div class="panel" id="apply-panel">
           <form id="apply-form">
             <div class="form-grid">
+              <div class="field full">
+                <label>Who is this application for? *</label>
+                <div style="display:flex;gap:22px;flex-wrap:wrap;margin-top:6px;">
+                  <label style="font-weight:400;display:flex;gap:8px;align-items:center;cursor:pointer;"><input type="radio" name="mode" value="self" checked> For myself</label>
+                  <label style="font-weight:400;display:flex;gap:8px;align-items:center;cursor:pointer;"><input type="radio" name="mode" value="nominate"> I'm a member nominating someone</label>
+                </div>
+              </div>
+              <div class="field full" id="nominator-wrap" style="display:none;">
+                <label for="a-nomby">Your Sciovia membership number *</label>
+                <input id="a-nomby" name="nominatorMemberNo" type="text" placeholder="SCV-2026-000000" pattern="SCV-\d{4}-\d{6}" title="Format: SCV-2026-000000">
+                <p style="font-size:.82rem;color:var(--muted);margin:6px 0 0;">Enter the person you're nominating in the fields below — their Member Pass is issued to them.</p>
+              </div>
               <div class="field full"><label for="a-name">Full name *</label><input id="a-name" name="name" type="text" placeholder="e.g. Dr. Aisha Rahman" required></div>
               <div class="field"><label for="a-email">Email *</label><input id="a-email" name="email" type="email" placeholder="you@university.edu" required></div>
               <div class="field"><label for="a-cat">Requested tier *</label>
@@ -119,7 +131,7 @@
               <div class="field"><label for="a-country">Country</label><input id="a-country" name="country" type="text"></div>
               <div class="field"><label for="a-field">Field / research area *</label><input id="a-field" name="field" type="text" placeholder="e.g. Machine learning" required></div>
               <div class="field full"><label for="a-profile">Profile or homepage (Scholar / ORCID / LinkedIn)</label><input id="a-profile" name="profile" type="url" placeholder="https://…"></div>
-              <div class="field full"><label for="a-ref">Referred by a Sciovia member? (optional)</label><input id="a-ref" name="referredBy" type="text" placeholder="Their name or Sciovia ID — helps fast-track your application"></div>
+              <div class="field full" id="ref-wrap"><label for="a-ref">Referred by a Sciovia member? (optional)</label><input id="a-ref" name="referredBy" type="text" placeholder="Their name or Sciovia ID — helps fast-track your application"></div>
               <div class="field full"><label for="a-reason">Why would you like to join? (optional)</label><textarea id="a-reason" name="reason" placeholder="A sentence or two."></textarea></div>
             </div>
             <button class="btn btn-gold btn-lg" type="submit" style="margin-top:20px;">Submit application</button>
