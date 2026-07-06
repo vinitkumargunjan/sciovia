@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sciovia.org/sitemap.xml
