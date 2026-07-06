@@ -20,7 +20,7 @@ var TEAM_EMAIL = 'teamsciovia@gmail.com';
 var FROM_NAME  = 'Sciovia';
 
 var HEADERS = ['Timestamp','Name','Email','Tier','Affiliation','Country',
-               'Field','Profile','Reason','Status','MemberNo','ProcessedAt'];
+               'Field','Profile','Reason','Referred by','Status','MemberNo','ProcessedAt','Note'];
 
 // --- Opportunities: managed by section editors in a SEPARATE "Sciovia Opportunities" sheet ---
 // tab = the sheet tab an editor works in; category = the value the website filters by.
@@ -51,12 +51,7 @@ function doPost(e) {
     if (d.type === 'contact') return handleContact_(d);
     if (d.type === 'subscribe') return handleSubscribe_(d);
     if (d.type === 'submission') return handleSubmission_(d);
-    sheet_().appendRow([
-      new Date(), d.name || '', d.email || '', d.category || '',
-      d.affiliation || '', d.country || '', d.field || '', d.profile || '',
-      d.reason || '', 'Pending', '', ''
-    ]);
-    return json_({ ok: true });
+    return handleApplication_(d);
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   }
@@ -102,6 +97,23 @@ function handleSubscribe_(d) {
 function handleSubmission_(d) {
   tab_('Submissions', ['Timestamp', 'Type', 'Title', 'Organization', 'Location', 'Mode', 'Dates', 'Deadline', 'Link', 'Submitter', 'Email', 'Notes'])
     .appendRow([new Date(), d.category || '', d.title || '', d.org || '', d.location || '', d.mode || '', d.dates || '', d.deadline || '', d.link || '', d.name || '', d.email || '', d.notes || '']);
+  return json_({ ok: true });
+}
+
+/** Membership application -> Applications tab (header-aware, records optional "Referred by"). */
+function handleApplication_(d) {
+  var sh = sheet_();
+  ensureCol_(sh, 'Referred by');
+  var headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  var map = {
+    'Timestamp': new Date(),
+    'Name': d.name || '', 'Email': d.email || '', 'Tier': d.category || '',
+    'Affiliation': d.affiliation || '', 'Country': d.country || '',
+    'Field': d.field || '', 'Profile': d.profile || '', 'Reason': d.reason || '',
+    'Referred by': d.referredBy || '', 'Status': 'Pending'
+  };
+  var row = headers.map(function (h) { return (map[h] !== undefined) ? map[h] : ''; });
+  sh.appendRow(row);
   return json_({ ok: true });
 }
 
