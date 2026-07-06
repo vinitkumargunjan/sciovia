@@ -137,10 +137,12 @@ function handleContact_(d) {
   return json_({ ok: true });
 }
 
-/** Reads all "Published" opportunities from every section tab; returns JSON for the website. */
-function opportunitiesJson_() {
+function opportunitiesJson_() { return json_(getOpportunities_()); }
+
+/** Reads all "Published" opportunities from every section tab as an array. */
+function getOpportunities_() {
   var ss = getOppSheet_();
-  if (!ss) return json_([]);
+  if (!ss) return [];
   var out = [];
   OPP_SECTIONS.forEach(function (sec) {
     var sh = ss.getSheetByName(sec.tab);
@@ -166,7 +168,7 @@ function opportunitiesJson_() {
       });
     }
   });
-  return json_(out);
+  return out;
 }
 
 function fmtDate_(v) {
@@ -230,11 +232,137 @@ var OPP_SEED = {
   ]
 };
 
+/* ============================ NEWSLETTER ============================ */
+
+var NEWSLETTER_SHEET = 'Newsletter';
+
+/** Creates/returns the "Newsletter" tab (a simple Field/Value editor for each issue). */
+function newsletterConfig_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(NEWSLETTER_SHEET);
+  if (!sh) {
+    sh = ss.insertSheet(NEWSLETTER_SHEET);
+    sh.getRange(1, 1, 1, 2).setValues([['Field', 'Value']]);
+    sh.appendRow(['Issue label', 'Issue 1 · ' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'MMM yyyy')]);
+    sh.appendRow(['Intro', "Welcome to this week's Sciovia digest — a short, curated round-up of opportunities worth your time."]);
+    sh.appendRow(['Researcher of the Week', '']);
+    sh.appendRow(['Practical Tip', '']);
+    sh.setFrozenRows(1);
+    sh.setColumnWidth(1, 180); sh.setColumnWidth(2, 560);
+  }
+  return sh;
+}
+
+function newsletterValues_() {
+  var sh = newsletterConfig_();
+  var v = sh.getRange(2, 1, Math.max(1, sh.getLastRow() - 1), 2).getValues();
+  var map = {};
+  v.forEach(function (r) { if (r[0]) map[String(r[0]).trim()] = String(r[1] || ''); });
+  return map;
+}
+
+function subscribersEmails_() {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Subscribers');
+  if (!sh || sh.getLastRow() < 2) return [];
+  var headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  var ei = headers.indexOf('Email'); if (ei === -1) ei = 1;
+  var vals = sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues();
+  var seen = {}, out = [];
+  vals.forEach(function (r) {
+    var e = String(r[ei] || '').trim().toLowerCase();
+    if (e && e.indexOf('@') > 0 && !seen[e]) { seen[e] = 1; out.push(e); }
+  });
+  return out;
+}
+
+function buildNewsletterHtml_() {
+  var cfg = newsletterValues_();
+  var opps = getOpportunities_().sort(function (a, b) {
+    return String(a.deadline || '9999').localeCompare(String(b.deadline || '9999'));
+  });
+  var order = ['Conferences & Calls', 'Funding', 'Position', 'Internship', 'News & Updates'];
+  var labels = { 'Position': 'Positions', 'Internship': 'Internships' };
+  var sections = '';
+  order.forEach(function (cat) {
+    var items = opps.filter(function (o) { return o.category === cat; }).slice(0, 4);
+    if (!items.length) return;
+    var rows = items.map(function (o) {
+      var dl = o.deadline ? ' · Deadline: ' + o.deadline : '';
+      return '<p style="margin:0 0 12px"><a href="' + o.link + '" style="color:#14524b;font-weight:bold;text-decoration:none">' +
+        esc_(o.title) + '</a><br><span style="color:#5f716f;font-size:13px">' + esc_(o.org) + dl + '</span></p>';
+    }).join('');
+    sections += '<h3 style="font-family:Georgia,serif;color:#14524b;margin:22px 0 10px;border-bottom:1px solid #e7e1d5;padding-bottom:6px">' +
+      esc_(labels[cat] || cat) + '</h3>' + rows;
+  });
+  var extra = '';
+  if (cfg['Researcher of the Week']) extra += '<h3 style="font-family:Georgia,serif;color:#14524b;margin:22px 0 10px">Researcher of the Week</h3><p style="color:#333">' + esc_(cfg['Researcher of the Week']) + '</p>';
+  if (cfg['Practical Tip']) extra += '<h3 style="font-family:Georgia,serif;color:#14524b;margin:22px 0 10px">One Practical Tip</h3><p style="color:#333">' + esc_(cfg['Practical Tip']) + '</p>';
+  return '<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:auto;color:#1a2a2a">' +
+    '<div style="background:#14524b;padding:24px 28px;border-radius:12px 12px 0 0">' +
+      '<div style="font-size:24px;font-family:Georgia,serif;color:#faf7f1">Sciovia</div>' +
+      '<div style="font-size:12px;color:#e0a648;letter-spacing:3px">THE PATH OF KNOWING · ' + esc_(cfg['Issue label'] || '') + '</div></div>' +
+    '<div style="border:1px solid #e7e1d5;border-top:none;border-radius:0 0 12px 12px;padding:26px 28px">' +
+      (cfg['Intro'] ? '<p style="font-size:15px;color:#333">' + esc_(cfg['Intro']) + '</p>' : '') +
+      sections + extra +
+      '<hr style="border:none;border-top:1px solid #e7e1d5;margin:24px 0">' +
+      '<p style="font-size:13px;color:#5f716f">Browse everything at <a href="https://sciovia.org/opportunities.html" style="color:#14524b">sciovia.org</a>.</p>' +
+      '<p style="font-size:12px;color:#5f716f">You are receiving this because you subscribed at sciovia.org. To unsubscribe, <a href="mailto:hello@sciovia.org?subject=Unsubscribe" style="color:#5f716f">click here</a>.<br>An initiative of the Sciovia Managing Committee · Independent &amp; non-commercial · hello@sciovia.org</p>' +
+    '</div></div>';
+}
+
+function setupNewsletter() {
+  var sh = newsletterConfig_();
+  SpreadsheetApp.getUi().alert('Sciovia Newsletter',
+    'The "Newsletter" tab is ready. Edit the Issue label, Intro, Researcher of the Week, and Practical Tip there — the opportunities are pulled in automatically. Then use "Send test to me", and "Send to all subscribers".',
+    SpreadsheetApp.getUi().ButtonSet.OK);
+  sh.activate();
+}
+
+/** Sends the composed digest only to the team address, for a preview. */
+function sendNewsletterTest() {
+  MailApp.sendEmail({
+    to: TEAM_EMAIL, name: FROM_NAME,
+    subject: 'Sciovia digest (TEST) — ' + (newsletterValues_()['Issue label'] || ''),
+    htmlBody: buildNewsletterHtml_()
+  });
+  SpreadsheetApp.getUi().alert('Sciovia', 'Test digest sent to ' + TEAM_EMAIL + '. Review it, then use "Send to all subscribers".',
+    SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+/** Sends the digest to every subscriber (respects the free Gmail daily quota). */
+function sendNewsletter() {
+  var ui = SpreadsheetApp.getUi();
+  var subs = subscribersEmails_();
+  if (!subs.length) { ui.alert('Sciovia', 'No subscribers yet.', ui.ButtonSet.OK); return; }
+  var quota = MailApp.getRemainingDailyQuota();
+  if (quota < subs.length) {
+    ui.alert('Sciovia', 'Not enough email quota today: ' + quota + ' left, but ' + subs.length + ' subscribers. ' +
+      'Free Gmail allows ~100/day — send the rest tomorrow, or move to a bulk sender (Substack/Beehiiv) as you grow.', ui.ButtonSet.OK);
+    return;
+  }
+  var resp = ui.alert('Send newsletter', 'Send this issue to ' + subs.length + ' subscriber(s)?\n(Send a test to yourself first if you have not.)', ui.ButtonSet.YES_NO);
+  if (resp !== ui.Button.YES) return;
+  var html = buildNewsletterHtml_();
+  var subject = 'Sciovia digest — ' + (newsletterValues_()['Issue label'] || '');
+  var sent = 0;
+  subs.forEach(function (email) {
+    try { MailApp.sendEmail({ to: email, name: FROM_NAME, replyTo: TEAM_EMAIL, subject: subject, htmlBody: html }); sent++; } catch (e) {}
+  });
+  ui.alert('Sciovia', sent + ' newsletter email(s) sent.', ui.ButtonSet.OK);
+}
+
+/* ==================================================================== */
+
 /** Adds the Sciovia menu when the sheet opens. */
 function onOpen() {
-  SpreadsheetApp.getUi().createMenu('Sciovia')
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Sciovia')
     .addItem('Process applications (approve / decline)', 'processApplications')
     .addItem('Set up Opportunities sheet', 'setupOpportunitiesSheet')
+    .addSubMenu(ui.createMenu('Newsletter')
+      .addItem('Set up newsletter tab', 'setupNewsletter')
+      .addItem('Send test to me', 'sendNewsletterTest')
+      .addItem('Send to all subscribers', 'sendNewsletter'))
     .addToUi();
 }
 

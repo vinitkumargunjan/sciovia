@@ -67,6 +67,20 @@ approve someone. It is free and takes about 20 minutes.
 
 ---
 
+## Sending the weekly newsletter
+
+Subscribers land in a **Subscribers** tab automatically. To send them a digest:
+
+1. Menu: **Sciovia → Newsletter → Set up newsletter tab** (first time only). This creates a **Newsletter** tab.
+2. In the **Newsletter** tab, edit the **Issue label**, **Intro**, **Researcher of the Week**, and **Practical Tip**. *(The opportunities are pulled in and grouped automatically from your live listings — you don't type those.)*
+3. Menu: **Sciovia → Newsletter → Send test to me** → check the email in your inbox.
+4. When it looks right: **Sciovia → Newsletter → Send to all subscribers**.
+
+Free Gmail sends ~100 emails/day. Once you pass that, move bulk sending to a
+dedicated tool (Substack/Beehiiv) — you already have the subscriber list to import.
+
+---
+
 ## Notes
 
 - Emails send **from** `teamsciovia@gmail.com`. Free Gmail allows ~100 emails/day
