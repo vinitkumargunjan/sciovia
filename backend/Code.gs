@@ -409,27 +409,28 @@ function fetchSuggestions() {
   try { sug.activate(); } catch (e) {}
 }
 
+// Tolerant RSS/Atom parser (regex-based, so it survives feeds that aren't strict XML).
 function parseFeed_(url) {
-  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
-  var xml = XmlService.parse(res.getContentText());
-  var root = xml.getRootElement(), out = [];
-  var channel = root.getChild('channel');
-  if (channel) { // RSS 2.0
-    channel.getChildren('item').forEach(function (it) {
-      out.push({ title: txt_(it.getChild('title')), link: txt_(it.getChild('link')) });
-    });
-    return out;
-  }
-  var atom = XmlService.getNamespace('http://www.w3.org/2005/Atom'); // Atom
-  root.getChildren('entry', atom).forEach(function (en) {
-    var links = en.getChildren('link', atom), link = '';
-    if (links.length && links[0].getAttribute('href')) link = links[0].getAttribute('href').getValue();
-    out.push({ title: txt_(en.getChild('title', atom)), link: link });
+  var body = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true }).getContentText();
+  var blocks = body.match(/<item[\s\S]*?<\/item>/gi) || body.match(/<entry[\s\S]*?<\/entry>/gi) || [];
+  var out = [];
+  blocks.forEach(function (b) {
+    var tm = b.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    var title = cleanText_(tm ? tm[1] : '');
+    var lm = b.match(/<link[^>]*>([\s\S]*?)<\/link>/i);
+    var link = lm ? cleanText_(lm[1]) : '';
+    if (!link) { var hm = b.match(/<link[^>]*href=["']([^"']+)["']/i); if (hm) link = hm[1]; } // Atom
+    if (title && link) out.push({ title: title, link: link });
   });
   return out;
 }
 
-function txt_(el) { return el ? el.getText().trim() : ''; }
+function cleanText_(s) {
+  var cd = String(s || '').match(/<!\[CDATA\[([\s\S]*?)\]\]>/);
+  var v = cd ? cd[1] : String(s || '');
+  return v.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&nbsp;/g, ' ').trim();
+}
 
 function maybeAlert_(msg) {
   try { SpreadsheetApp.getUi().alert('Sciovia', msg, SpreadsheetApp.getUi().ButtonSet.OK); }
