@@ -355,6 +355,78 @@ function sendNewsletter() {
   ui.alert('Sciovia', sent + ' newsletter email(s) sent.', ui.ButtonSet.OK);
 }
 
+/* ==================== OPPORTUNITY SUGGESTIONS (RSS) ==================== */
+// Pulls items from RSS/Atom feeds into a "Suggestions" tab for editors to review.
+// Nothing is auto-published — an editor still copies good ones into their section.
+
+var FEEDS_TAB = 'Feeds';
+var SUGGESTIONS_TAB = 'Suggestions';
+
+function fetchSuggestions() {
+  var ss = getOppSheet_();
+  if (!ss) { maybeAlert_('Run "Set up Opportunities sheet" first.'); return; }
+
+  var feeds = ss.getSheetByName(FEEDS_TAB);
+  if (!feeds) {
+    feeds = ss.insertSheet(FEEDS_TAB);
+    feeds.appendRow(['Section', 'Feed URL', 'Source']);
+    feeds.appendRow(['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=artificial%20intelligence', 'WikiCFP · AI']);
+    feeds.setFrozenRows(1); feeds.setColumnWidth(2, 460);
+  }
+  var sug = ss.getSheetByName(SUGGESTIONS_TAB);
+  if (!sug) {
+    sug = ss.insertSheet(SUGGESTIONS_TAB);
+    sug.appendRow(['Found', 'Section', 'Title', 'Link', 'Source']);
+    sug.setFrozenRows(1); sug.setColumnWidth(3, 380); sug.setColumnWidth(4, 320);
+  }
+
+  var seen = {};
+  if (sug.getLastRow() > 1) {
+    sug.getRange(2, 4, sug.getLastRow() - 1, 1).getValues().forEach(function (r) { if (r[0]) seen[String(r[0]).trim()] = 1; });
+  }
+  var feedRows = feeds.getLastRow() > 1 ? feeds.getRange(2, 1, feeds.getLastRow() - 1, 3).getValues() : [];
+  var newRows = [];
+  feedRows.forEach(function (fr) {
+    var section = fr[0], url = String(fr[1] || '').trim(), source = fr[2] || '';
+    if (!url) return;
+    try {
+      parseFeed_(url).slice(0, 15).forEach(function (it) {
+        if (it.link && !seen[it.link]) { seen[it.link] = 1; newRows.push([new Date(), section, it.title, it.link, source]); }
+      });
+    } catch (e) { /* skip a broken feed */ }
+  });
+  if (newRows.length) sug.getRange(sug.getLastRow() + 1, 1, newRows.length, 5).setValues(newRows);
+  maybeAlert_(newRows.length + ' new suggestion(s) added to the "Suggestions" tab for review.');
+  try { sug.activate(); } catch (e) {}
+}
+
+function parseFeed_(url) {
+  var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
+  var xml = XmlService.parse(res.getContentText());
+  var root = xml.getRootElement(), out = [];
+  var channel = root.getChild('channel');
+  if (channel) { // RSS 2.0
+    channel.getChildren('item').forEach(function (it) {
+      out.push({ title: txt_(it.getChild('title')), link: txt_(it.getChild('link')) });
+    });
+    return out;
+  }
+  var atom = XmlService.getNamespace('http://www.w3.org/2005/Atom'); // Atom
+  root.getChildren('entry', atom).forEach(function (en) {
+    var links = en.getChildren('link', atom), link = '';
+    if (links.length && links[0].getAttribute('href')) link = links[0].getAttribute('href').getValue();
+    out.push({ title: txt_(en.getChild('title', atom)), link: link });
+  });
+  return out;
+}
+
+function txt_(el) { return el ? el.getText().trim() : ''; }
+
+function maybeAlert_(msg) {
+  try { SpreadsheetApp.getUi().alert('Sciovia', msg, SpreadsheetApp.getUi().ButtonSet.OK); }
+  catch (e) { Logger.log(msg); } // running from a time trigger — no UI
+}
+
 /* ==================================================================== */
 
 /** Adds the Sciovia menu when the sheet opens. */
@@ -363,6 +435,7 @@ function onOpen() {
   ui.createMenu('Sciovia')
     .addItem('Process applications (approve / decline)', 'processApplications')
     .addItem('Set up Opportunities sheet', 'setupOpportunitiesSheet')
+    .addItem('Fetch opportunity suggestions (RSS)', 'fetchSuggestions')
     .addSubMenu(ui.createMenu('Newsletter')
       .addItem('Set up newsletter tab', 'setupNewsletter')
       .addItem('Send test to me', 'sendNewsletterTest')

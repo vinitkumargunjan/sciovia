@@ -81,6 +81,18 @@ dedicated tool (Substack/Beehiiv) — you already have the subscriber list to im
 
 ---
 
+## Auto-suggestions from RSS feeds (optional)
+
+The script can pull opportunities from RSS/Atom feeds into a **Suggestions** tab for editors to review. **Nothing is auto-published** — an editor still copies good ones into their section and ticks Published.
+
+1. Menu: **Sciovia → Fetch opportunity suggestions (RSS)**. The first run creates a **Feeds** tab and a **Suggestions** tab inside the *Sciovia Opportunities* sheet.
+2. In the **Feeds** tab, list the feeds you want — one per row: **Section · Feed URL · Source**. Many portals offer RSS (WikiCFP category feeds, jobs.ac.uk searches, Nature Careers, EURAXESS, journal tables-of-contents).
+3. Run the menu again anytime to pull new items into **Suggestions**. Editors glance through and promote the good ones.
+
+**To run it automatically every day:** in the Apps Script editor, click the ⏰ **Triggers** icon (left sidebar) → **Add Trigger** → choose function **`fetchSuggestions`**, event source **Time-driven**, type **Day timer**, then Save.
+
+---
+
 ## Notes
 
 - Emails send **from** `teamsciovia@gmail.com`. Free Gmail allows ~100 emails/day
