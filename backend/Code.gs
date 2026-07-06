@@ -15,7 +15,7 @@
 
 var SHEET_NAME = 'Applications';
 var MESSAGES_SHEET = 'Messages';
-var CARD_BASE  = 'https://vinitkumargunjan.github.io/sciovia/card.html';
+var CARD_BASE  = 'https://sciovia.org/card.html';
 var TEAM_EMAIL = 'teamsciovia@gmail.com';
 var FROM_NAME  = 'Sciovia';
 

@@ -159,7 +159,7 @@ async function drawCard(canvas, data) {
 /* verification QR — links to the Sciovia verify page for this Sciovia ID */
 function drawVerifyQR(ctx, cx, cy, size, id) {
   if (typeof qrcode === "undefined") return;
-  const url = `https://vinitkumargunjan.github.io/sciovia/verify.html?id=${encodeURIComponent(id)}`;
+  const url = `https://sciovia.org/verify.html?id=${encodeURIComponent(id)}`;
   const qr = qrcode(0, "M"); qr.addData(url); qr.make();
   const n = qr.getModuleCount(), pad = 9, cell = size / n;
   ctx.fillStyle = "#e0a648"; ctx.textAlign = "center"; ctx.letterSpacing = "2px";
