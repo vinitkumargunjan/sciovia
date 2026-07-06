@@ -139,10 +139,12 @@ function handleContact_(d) {
 
 function opportunitiesJson_() { return json_(getOpportunities_()); }
 
-/** Reads all "Published" opportunities from every section tab as an array. */
+/** Reads all "Published" opportunities from every section tab as an array.
+ *  Listings whose deadline has passed are automatically hidden (rolling ones stay). */
 function getOpportunities_() {
   var ss = getOppSheet_();
   if (!ss) return [];
+  var today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   var out = [];
   OPP_SECTIONS.forEach(function (sec) {
     var sh = ss.getSheetByName(sec.tab);
@@ -155,6 +157,8 @@ function getOpportunities_() {
       var pub = r[idx['Published']];
       var isPub = (pub === true) || String(pub).toUpperCase() === 'TRUE' || String(pub).toLowerCase() === 'yes';
       if (!isPub || !r[idx['Title']]) continue;
+      var dl = fmtDate_(r[idx['Deadline']]);
+      if (dl && dl < today) continue;   // auto-hide once the deadline has passed
       out.push({
         category: sec.category,
         type: r[idx['Type']] || '',
@@ -163,7 +167,7 @@ function getOpportunities_() {
         location: r[idx['Location']] || '',
         mode: r[idx['Mode']] || '',
         dates: r[idx['Dates']] || '',
-        deadline: fmtDate_(r[idx['Deadline']]),
+        deadline: dl,
         link: r[idx['Link']] || ''
       });
     }
