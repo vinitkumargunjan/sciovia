@@ -370,7 +370,16 @@ function fetchSuggestions() {
   if (!feeds) {
     feeds = ss.insertSheet(FEEDS_TAB);
     feeds.appendRow(['Section', 'Feed URL', 'Source']);
-    feeds.appendRow(['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=artificial%20intelligence', 'WikiCFP · AI']);
+    [
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=artificial%20intelligence', 'WikiCFP · AI'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=machine%20learning', 'WikiCFP · Machine Learning'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=deep%20learning', 'WikiCFP · Deep Learning'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=data%20mining', 'WikiCFP · Data Mining'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=data%20science', 'WikiCFP · Data Science'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=computer%20vision', 'WikiCFP · Computer Vision'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=internet%20of%20things', 'WikiCFP · IoT'],
+      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=image%20processing', 'WikiCFP · Image Processing']
+    ].forEach(function (s) { feeds.appendRow(s); });
     feeds.setFrozenRows(1); feeds.setColumnWidth(2, 460);
   }
   var sug = ss.getSheetByName(SUGGESTIONS_TAB);
