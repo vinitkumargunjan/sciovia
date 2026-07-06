@@ -53,17 +53,17 @@ approve someone. It is free and takes about 20 minutes.
 
 ---
 
-## How you approve a member (day-to-day)
+## How you review applications (day-to-day)
 
 1. Open the **Sciovia Members** sheet → **Applications** tab.
 2. Read the applicant's details (field, profile link, reason).
-3. To approve: type **`Approved`** in that row's **Status** column.
-4. Menu: **Sciovia → Send passes to approved members**.
-   - Each approved applicant gets the next **Sciovia ID** (SCV-2026-000001, …)
-   - They receive an automatic welcome email with a link to their Member Pass.
-   - Their Status changes to **Sent** and the ID is recorded.
-
-To decline someone, just leave them (or write `Rejected`) — no email is sent.
+3. In the **Status** column, type:
+   - **`Approved`** to accept, or
+   - **`Rejected`** to decline — and (optional) type a short reason in the **Note** column.
+4. Menu: **Sciovia → Process applications (approve / decline)**.
+   - **Approved** → gets the next **Sciovia ID** (SCV-2026-000001, …) + an automatic welcome email with their Member Pass. Status becomes **Sent**.
+   - **Rejected** → gets a courteous decline email (including your **Note** reason, if any). Status becomes **Declined**.
+   - Rows you leave blank/Pending are untouched.
 
 ---
 

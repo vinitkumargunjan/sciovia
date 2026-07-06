@@ -213,22 +213,33 @@ var OPP_SEED = {
 /** Adds the Sciovia menu when the sheet opens. */
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Sciovia')
-    .addItem('Send passes to approved members', 'processApprovals')
+    .addItem('Process applications (approve / decline)', 'processApplications')
     .addItem('Set up Opportunities sheet', 'setupOpportunitiesSheet')
     .addToUi();
 }
 
-/** Emails every row whose Status is "Approved" and has no MemberNo yet. */
-function processApprovals() {
+/** Ensures a header column exists on a sheet; adds it at the end if missing. */
+function ensureCol_(sh, name) {
+  var last = Math.max(1, sh.getLastColumn());
+  var headers = sh.getRange(1, 1, 1, last).getValues()[0];
+  if (headers.indexOf(name) === -1) sh.getRange(1, last + 1).setValue(name);
+}
+
+/**
+ * Processes membership applications:
+ *  - Status "Approved"  -> assigns a Sciovia ID and emails the Member Pass welcome.
+ *  - Status "Rejected"  -> emails a courteous decline (with the reason from the "Note" column).
+ * Set the Status cell, then run this from the Sciovia menu.
+ */
+function processApplications() {
   var sh = sheet_();
+  ensureCol_(sh, 'Note');                       // where you type a decline reason
   var values = sh.getDataRange().getValues();
   var headers = values[0];
   var c = {};
-  HEADERS.forEach(function (h) { c[h] = headers.indexOf(h); });
+  headers.forEach(function (h, i) { c[h] = i; });
 
   var rows = values.slice(1);
-
-  // find the highest existing Sciovia ID for this year, to continue the sequence
   var year = new Date().getFullYear();
   var max = 0;
   rows.forEach(function (r) {
@@ -236,40 +247,62 @@ function processApprovals() {
     if (m) { var n = parseInt(m[1], 10); if (n > max) max = n; }
   });
 
-  var sent = 0;
+  var approved = 0, declined = 0;
   for (var i = 0; i < rows.length; i++) {
     var r = rows[i];
     var status = String(r[c.Status] || '').toLowerCase();
-    if (status !== 'approved' || r[c.MemberNo]) continue;
     var email = String(r[c.Email] || '').trim();
+    var name = r[c.Name] || '';
+    var rowNum = i + 2;
     if (!email) continue;
 
-    max += 1;
-    var no = 'SCV-' + year + '-' + ('000000' + max).slice(-6);
-    var name = r[c.Name], tier = r[c.Tier] || 'Member', aff = r[c.Affiliation] || '';
-    var link = CARD_BASE
-      + '?id='   + encodeURIComponent(no)
-      + '&name=' + encodeURIComponent(name)
-      + '&tier=' + encodeURIComponent(tier)
-      + '&aff='  + encodeURIComponent(aff);
-
-    MailApp.sendEmail({
-      to: email,
-      name: FROM_NAME,
-      replyTo: TEAM_EMAIL,
-      subject: 'Welcome to Sciovia — your Member Pass',
-      htmlBody: welcomeHtml_(name, no, tier, link)
-    });
-
-    var row = i + 2; // +1 header, +1 for 1-based rows
-    sh.getRange(row, c.MemberNo + 1).setValue(no);
-    sh.getRange(row, c.Status + 1).setValue('Sent');
-    sh.getRange(row, c.ProcessedAt + 1).setValue(new Date());
-    sent++;
+    if (status === 'approved' && !r[c.MemberNo]) {
+      max += 1;
+      var no = 'SCV-' + year + '-' + ('000000' + max).slice(-6);
+      var tier = r[c.Tier] || 'Member', aff = r[c.Affiliation] || '';
+      var link = CARD_BASE + '?id=' + encodeURIComponent(no) + '&name=' + encodeURIComponent(name)
+               + '&tier=' + encodeURIComponent(tier) + '&aff=' + encodeURIComponent(aff);
+      MailApp.sendEmail({ to: email, name: FROM_NAME, replyTo: TEAM_EMAIL,
+        subject: 'Welcome to Sciovia — your Member Pass', htmlBody: welcomeHtml_(name, no, tier, link) });
+      sh.getRange(rowNum, c.MemberNo + 1).setValue(no);
+      sh.getRange(rowNum, c.Status + 1).setValue('Sent');
+      sh.getRange(rowNum, c.ProcessedAt + 1).setValue(new Date());
+      approved++;
+    } else if (status === 'rejected' && !r[c.ProcessedAt]) {
+      var reason = (c.Note != null && r[c.Note]) ? String(r[c.Note]) : '';
+      MailApp.sendEmail({ to: email, name: FROM_NAME, replyTo: TEAM_EMAIL,
+        subject: 'Your Sciovia membership application', htmlBody: declineHtml_(name, reason) });
+      sh.getRange(rowNum, c.Status + 1).setValue('Declined');
+      sh.getRange(rowNum, c.ProcessedAt + 1).setValue(new Date());
+      declined++;
+    }
   }
 
-  SpreadsheetApp.getUi().alert('Sciovia', sent + ' welcome email(s) sent.',
+  SpreadsheetApp.getUi().alert('Sciovia',
+    approved + ' welcome email(s) sent · ' + declined + ' decline email(s) sent.',
     SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+function declineHtml_(name, reason) {
+  var reasonBlock = reason
+    ? '<p style="background:#f7f0f2;border-left:3px solid #b0516a;padding:12px 16px;border-radius:6px"><strong>Note:</strong> ' + esc_(reason) + '</p>'
+    : '';
+  return '' +
+  '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;color:#1a2a2a">' +
+    '<div style="background:#14524b;padding:26px 30px;border-radius:12px 12px 0 0">' +
+      '<div style="font-size:24px;font-family:Georgia,serif;color:#faf7f1">Sciovia</div>' +
+      '<div style="font-size:12px;color:#e0a648;letter-spacing:3px">THE PATH OF KNOWING</div>' +
+    '</div>' +
+    '<div style="border:1px solid #e7e1d5;border-top:none;border-radius:0 0 12px 12px;padding:28px 30px">' +
+      '<p>Dear ' + esc_(name) + ',</p>' +
+      '<p>Thank you for your interest in joining the Sciovia community. After careful review, we are unable to approve your membership at this time.</p>' +
+      reasonBlock +
+      '<p>This is not a judgement of your work — we simply keep membership aligned with our current focus, and you are warmly welcome to apply again in future.</p>' +
+      '<p>Meanwhile, everything Sciovia offers — the weekly digest, opportunities, and awards — remains free and open to you at <a href="https://sciovia.org">sciovia.org</a>.</p>' +
+      '<p style="margin-top:22px">With appreciation,<br>The Sciovia Managing Committee</p>' +
+      '<p style="color:#5f716f;font-size:12px;margin-top:20px">Independent &amp; non-commercial · hello@sciovia.org</p>' +
+    '</div>' +
+  '</div>';
 }
 
 function welcomeHtml_(name, no, tier, link) {
