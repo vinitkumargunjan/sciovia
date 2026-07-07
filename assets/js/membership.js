@@ -146,7 +146,7 @@ async function drawCard(canvas, data) {
   // fields (Sciovia-native labels)
   label("SCIOVIA ID", PAD, 322); val(data.number, PAD, 360, 28, true);
   label("STANDING", 380, 322); val(data.category || "Member", 380, 360, 26, false, 300);
-  label("AFFILIATION", PAD, 432); val(data.affiliation || "—", PAD, 470, 24, false, 600);
+  label("AFFILIATION", PAD, 432); drawAffiliation(ctx, data.affiliation || "—", PAD, 470, 625, 2);
   label("ISSUED", PAD, 540); val(fmtDate(new Date()), PAD, 576, 22, false, 220);
   label("RENEWS", 300, 540); val(`Dec ${JOIN_YEAR + 1}`, 300, 576, 22, false, 200);
 
@@ -154,6 +154,27 @@ async function drawCard(canvas, data) {
   drawSeal(ctx, 860, 246);
   drawVerifyQR(ctx, 860, 486, 104, data.number);
   ctx.letterSpacing = "0px"; ctx.textAlign = "left";
+}
+
+/* affiliation — wraps to up to `maxLines` lines within `maxWidth`, ellipsising if longer */
+function drawAffiliation(ctx, text, x, y, maxWidth, maxLines) {
+  ctx.letterSpacing = "0px"; ctx.fillStyle = "#faf7f1";
+  ctx.font = "600 23px Fraunces, Georgia, serif";
+  const words = String(text || "—").split(/\s+/);
+  const lines = []; let cur = "";
+  for (const w of words) {
+    const test = cur ? cur + " " + w : w;
+    if (cur && ctx.measureText(test).width > maxWidth) { lines.push(cur); cur = w; }
+    else cur = test;
+  }
+  if (cur) lines.push(cur);
+  if (lines.length > maxLines) {
+    lines.length = maxLines;
+    let last = lines[maxLines - 1];
+    while (last.length && ctx.measureText(last + "…").width > maxWidth) last = last.slice(0, -1).replace(/\s+$/, "");
+    lines[maxLines - 1] = last + "…";
+  }
+  lines.forEach((ln, i) => ctx.fillText(ln, x, y + i * 30));
 }
 
 /* verification QR — links to the Sciovia verify page for this Sciovia ID */
