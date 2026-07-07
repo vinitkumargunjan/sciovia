@@ -355,117 +355,12 @@ function sendNewsletter() {
   ui.alert('Sciovia', sent + ' newsletter email(s) sent.', ui.ButtonSet.OK);
 }
 
-/* ==================== OPPORTUNITY SUGGESTIONS (RSS) ==================== */
-// Pulls items from RSS/Atom feeds into a "Suggestions" tab for editors to review.
-// Nothing is auto-published — an editor still copies good ones into their section.
-
-var FEEDS_TAB = 'Feeds';
-var SUGGESTIONS_TAB = 'Suggestions';
-
-function fetchSuggestions() {
-  var ss = getOppSheet_();
-  if (!ss) { maybeAlert_('Run "Set up Opportunities sheet" first.'); return; }
-
-  var feeds = ss.getSheetByName(FEEDS_TAB);
-  if (!feeds) {
-    feeds = ss.insertSheet(FEEDS_TAB);
-    feeds.appendRow(['Section', 'Feed URL', 'Source']);
-    [
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=artificial%20intelligence', 'WikiCFP · AI'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=machine%20learning', 'WikiCFP · Machine Learning'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=deep%20learning', 'WikiCFP · Deep Learning'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=data%20mining', 'WikiCFP · Data Mining'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=data%20science', 'WikiCFP · Data Science'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=computer%20vision', 'WikiCFP · Computer Vision'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=internet%20of%20things', 'WikiCFP · IoT'],
-      ['Conferences & Calls', 'http://www.wikicfp.com/cfp/rss?cat=image%20processing', 'WikiCFP · Image Processing']
-    ].forEach(function (s) { feeds.appendRow(s); });
-    feeds.setFrozenRows(1); feeds.setColumnWidth(2, 460);
-  }
-  var sug = ss.getSheetByName(SUGGESTIONS_TAB);
-  if (!sug) {
-    sug = ss.insertSheet(SUGGESTIONS_TAB);
-    sug.appendRow(['Found', 'Section', 'Title', 'Link', 'Source']);
-    sug.setFrozenRows(1); sug.setColumnWidth(3, 380); sug.setColumnWidth(4, 320);
-  }
-
-  var seen = {};
-  if (sug.getLastRow() > 1) {
-    sug.getRange(2, 4, sug.getLastRow() - 1, 1).getValues().forEach(function (r) { if (r[0]) seen[String(r[0]).trim()] = 1; });
-  }
-  var feedRows = (feeds.getLastRow() > 1 ? feeds.getRange(2, 1, feeds.getLastRow() - 1, 3).getValues() : [])
-    .filter(function (fr) { return String(fr[1] || '').trim(); });
-  var requests = feedRows.map(function (fr) {
-    return {
-      url: String(fr[1]).trim(), muteHttpExceptions: true, followRedirects: true,
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ScioviaBot/1.0; +https://sciovia.org)' }
-    };
-  });
-  var newRows = [], diag = [], responses = [];
-  try { responses = requests.length ? UrlFetchApp.fetchAll(requests) : []; }  // all feeds in parallel
-  catch (e) { maybeAlert_('Could not fetch feeds: ' + e); return; }
-  responses.forEach(function (res, i) {
-    var fr = feedRows[i], section = fr[0], source = String(fr[2] || 'feed');
-    try {
-      var items = parseFeedBody_(res.getContentText());
-      diag.push(source + ' -> http ' + res.getResponseCode() + ', ' + items.length + ' items');
-      items.slice(0, 15).forEach(function (it) {
-        if (it.link && !seen[it.link]) { seen[it.link] = 1; newRows.push([new Date(), section, it.title, it.link, source]); }
-      });
-    } catch (e) { diag.push(source + ' -> ERROR: ' + e); }
-  });
-  if (newRows.length) sug.getRange(sug.getLastRow() + 1, 1, newRows.length, 5).setValues(newRows);
-  var msg = newRows.length + ' new suggestion(s) added to the "Suggestions" tab.';
-  if (newRows.length === 0) msg += '\n\nDiagnostics per feed:\n' + (diag.join('\n') || '(no feeds found in the Feeds tab)');
-  maybeAlert_(msg);
-  try { sug.activate(); } catch (e) {}
-}
-
-function fetchFeed_(url) {
-  var res = UrlFetchApp.fetch(url, {
-    muteHttpExceptions: true, followRedirects: true,
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ScioviaBot/1.0; +https://sciovia.org)' }
-  });
-  return { code: res.getResponseCode(), body: res.getContentText() };
-}
-
-// Tolerant RSS/Atom parser (regex-based, so it survives feeds that aren't strict XML).
-function parseFeedBody_(body) {
-  var s = String(body || '');
-  var blocks = s.match(/<item[\s\S]*?<\/item>/gi) || s.match(/<entry[\s\S]*?<\/entry>/gi) || [];
-  var out = [];
-  blocks.forEach(function (b) {
-    var tm = b.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-    var title = cleanText_(tm ? tm[1] : '');
-    var lm = b.match(/<link[^>]*>([\s\S]*?)<\/link>/i);
-    var link = lm ? cleanText_(lm[1]) : '';
-    if (!link) { var hm = b.match(/<link[^>]*href=["']([^"']+)["']/i); if (hm) link = hm[1]; } // Atom
-    if (title && link) out.push({ title: title, link: link });
-  });
-  return out;
-}
-
-function cleanText_(s) {
-  var cd = String(s || '').match(/<!\[CDATA\[([\s\S]*?)\]\]>/);
-  var v = cd ? cd[1] : String(s || '');
-  return v.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&nbsp;/g, ' ').trim();
-}
-
-function maybeAlert_(msg) {
-  try { SpreadsheetApp.getUi().alert('Sciovia', msg, SpreadsheetApp.getUi().ButtonSet.OK); }
-  catch (e) { Logger.log(msg); } // running from a time trigger — no UI
-}
-
-/* ==================================================================== */
-
 /** Adds the Sciovia menu when the sheet opens. */
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu('Sciovia')
     .addItem('Process applications (approve / decline)', 'processApplications')
     .addItem('Set up Opportunities sheet', 'setupOpportunitiesSheet')
-    .addItem('Fetch opportunity suggestions (RSS)', 'fetchSuggestions')
     .addSubMenu(ui.createMenu('Newsletter')
       .addItem('Set up newsletter tab', 'setupNewsletter')
       .addItem('Send test to me', 'sendNewsletterTest')
