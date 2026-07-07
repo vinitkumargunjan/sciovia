@@ -131,13 +131,17 @@ This structure *is* the managing committee in practice: five Section Editors + a
 
 ## 11. Implementation — the section editors
 
-| Section tab | Section Editor | Email |
-|---|---|---|
-| Conferences & Calls | Dr Fahimuddin Shaik | fahimaits@gmail.com |
-| Funding | Dr Ninni Singh | ninnisingh1991@gmail.com |
-| Positions | Dr Radhakrishna Karne | krk.wgl@gmail.com |
-| Internships | Dr Vijender Kumar Solanki | spesinfo@gmail.com |
-| News & Updates | Dr Vinit Kumar Gunjan | vinitkumargunjan@gmail.com |
+Each of the five section tabs is assigned to one Section Editor. **Their names and
+emails are kept privately by the Coordinator and are deliberately not published here**
+(this repository is public). The Coordinator holds the current assignment list.
+
+| Section tab | Section Editor |
+|---|---|
+| Conferences & Calls | *(assigned privately)* |
+| Funding | *(assigned privately)* |
+| Positions | *(assigned privately)* |
+| Internships | *(assigned privately)* |
+| News & Updates | *(assigned privately)* |
 
 ### Setup (one time, in the teamsciovia account)
 
