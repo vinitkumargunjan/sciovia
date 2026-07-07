@@ -393,15 +393,22 @@ function fetchSuggestions() {
   if (sug.getLastRow() > 1) {
     sug.getRange(2, 4, sug.getLastRow() - 1, 1).getValues().forEach(function (r) { if (r[0]) seen[String(r[0]).trim()] = 1; });
   }
-  var feedRows = feeds.getLastRow() > 1 ? feeds.getRange(2, 1, feeds.getLastRow() - 1, 3).getValues() : [];
-  var newRows = [], diag = [];
-  feedRows.forEach(function (fr) {
-    var section = fr[0], url = String(fr[1] || '').trim(), source = String(fr[2] || 'feed');
-    if (!url) return;
+  var feedRows = (feeds.getLastRow() > 1 ? feeds.getRange(2, 1, feeds.getLastRow() - 1, 3).getValues() : [])
+    .filter(function (fr) { return String(fr[1] || '').trim(); });
+  var requests = feedRows.map(function (fr) {
+    return {
+      url: String(fr[1]).trim(), muteHttpExceptions: true, followRedirects: true,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ScioviaBot/1.0; +https://sciovia.org)' }
+    };
+  });
+  var newRows = [], diag = [], responses = [];
+  try { responses = requests.length ? UrlFetchApp.fetchAll(requests) : []; }  // all feeds in parallel
+  catch (e) { maybeAlert_('Could not fetch feeds: ' + e); return; }
+  responses.forEach(function (res, i) {
+    var fr = feedRows[i], section = fr[0], source = String(fr[2] || 'feed');
     try {
-      var f = fetchFeed_(url);
-      var items = parseFeedBody_(f.body);
-      diag.push(source + ' -> http ' + f.code + ', ' + items.length + ' items');
+      var items = parseFeedBody_(res.getContentText());
+      diag.push(source + ' -> http ' + res.getResponseCode() + ', ' + items.length + ' items');
       items.slice(0, 15).forEach(function (it) {
         if (it.link && !seen[it.link]) { seen[it.link] = 1; newRows.push([new Date(), section, it.title, it.link, source]); }
       });
