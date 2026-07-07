@@ -55,7 +55,7 @@ function eventCard(ev) {
         <span class="tag tag--${slug}">${esc(tagLabel)}</span>
       </div>
       <h3>${esc(ev.title)}</h3>
-      <p class="ev-org">${esc(ev.org)}</p>
+      ${ev.org ? `<p class="ev-org"><span class="ev-org-ic">🏛</span>${esc(ev.org)}</p>` : ""}
       <div class="ev-meta">${meta}</div>
       <div class="ev-foot">
         ${dlHtml}
