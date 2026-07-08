@@ -55,6 +55,16 @@ function fitFont(ctx, text, family, weight, maxSize, maxWidth) {
   return ctx.font;
 }
 
+// Title-case for display: capitalise each word's first letter (preserving acronyms
+// like IEEE/IIT by leaving the rest untouched), keep minor words lowercase.
+function titleCase(s) {
+  const minor = new Set(["of","and","the","for","in","on","at","to","a","an","or","by","with","de","du","&"]);
+  return String(s || "").split(/\s+/).map((w, i) =>
+    (i > 0 && minor.has(w.toLowerCase())) ? w.toLowerCase()
+      : w.charAt(0).toUpperCase() + w.slice(1)
+  ).join(" ");
+}
+
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 function fmtDate(d) { return `${String(d.getDate()).padStart(2,"0")} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
 
@@ -146,7 +156,7 @@ async function drawCard(canvas, data) {
   // fields (Sciovia-native labels)
   label("SCIOVIA ID", PAD, 322); val(data.number, PAD, 360, 28, true);
   label("STANDING", 380, 322); val(data.category || "Member", 380, 360, 26, false, 300);
-  label("AFFILIATION", PAD, 432); drawAffiliation(ctx, data.affiliation || "—", PAD, 470, 625, 2);
+  label("AFFILIATION", PAD, 432); drawAffiliation(ctx, titleCase(data.affiliation || "—"), PAD, 470, 625, 2);
   label("ISSUED", PAD, 540); val(fmtDate(new Date()), PAD, 576, 22, false, 220);
   label("RENEWS", 300, 540); val(`Dec ${JOIN_YEAR + 1}`, 300, 576, 22, false, 200);
 
