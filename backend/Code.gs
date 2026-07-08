@@ -33,6 +33,27 @@ var OPP_SECTIONS = [
 ];
 var OPP_HEADERS = ['Title','Type','Organization','Location','Mode','Dates','Deadline','Link','Published','Added by'];
 
+// Safeguard: an editor sometimes files a row under the wrong tab (e.g. an internship
+// pasted into "Conferences & Calls"). If the row's own Type clearly names a section,
+// trust the Type and route it there; otherwise fall back to the tab's category.
+// Order matters — "intern" is checked before "position" (an internship IS a position).
+var TYPE_CATEGORY_RULES = [
+  { re: /\bintern/i,                                              category: 'Internship' },
+  { re: /fellow|grant|funding|scholarship|award|bursary|stipend/i, category: 'Funding' },
+  { re: /call for paper|special session|special issue|publication call|\bcfp\b|\bconference\b|\bjournal\b|\bworkshop\b|\bsymposium\b/i, category: 'Conferences & Calls' },
+  { re: /position|\bphd\b|post.?doc|faculty|lectureship|\bjob\b|vacancy|opening|hiring/i, category: 'Position' },
+  { re: /\bnews\b|update|announcement/i,                          category: 'News & Updates' }
+];
+function categoryFor_(tabCategory, type) {
+  var t = String(type || '').trim();
+  if (t) {
+    for (var i = 0; i < TYPE_CATEGORY_RULES.length; i++) {
+      if (TYPE_CATEGORY_RULES[i].re.test(t)) return TYPE_CATEGORY_RULES[i].category;
+    }
+  }
+  return tabCategory;   // no clear signal in Type → keep the editor's tab
+}
+
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(SHEET_NAME);
@@ -160,7 +181,7 @@ function getOpportunities_() {
       var dl = fmtDate_(r[idx['Deadline']]);
       if (dl && dl < today) continue;   // auto-hide once the deadline has passed
       out.push({
-        category: sec.category,
+        category: categoryFor_(sec.category, r[idx['Type']]),
         type: r[idx['Type']] || '',
         title: r[idx['Title']] || '',
         org: r[idx['Organization']] || '',
