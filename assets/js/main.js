@@ -22,6 +22,24 @@ const CAT_SLUG = {
   "News & Updates": "news"
 };
 
+// Safeguard: a listing sometimes arrives under the wrong section because an editor
+// filed it in the wrong sheet tab (e.g. an internship in "Conferences & Calls").
+// If the item's own Type clearly names a section, trust the Type; otherwise keep
+// the category it came with. Mirror of TYPE_CATEGORY_RULES in backend/Code.gs —
+// keep the two in sync. "intern" is checked before "position" on purpose.
+const TYPE_CATEGORY_RULES = [
+  [/\bintern/i, "Internship"],
+  [/fellow|grant|funding|scholarship|award|bursary|stipend/i, "Funding"],
+  [/call for paper|special session|special issue|publication call|\bcfp\b|\bconference\b|\bjournal\b|\bworkshop\b|\bsymposium\b/i, "Conferences & Calls"],
+  [/position|\bphd\b|post.?doc|faculty|lectureship|\bjob\b|vacancy|opening|hiring/i, "Position"],
+  [/\bnews\b|update|announcement/i, "News & Updates"]
+];
+function correctedCategory(ev) {
+  const t = String(ev.type || "").trim();
+  if (t) for (const [re, cat] of TYPE_CATEGORY_RULES) if (re.test(t)) return cat;
+  return ev.category;
+}
+
 /* ---------- helpers ---------- */
 function el(html) { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; }
 function esc(s) { return String(s || "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;" }[c])); }
@@ -83,6 +101,9 @@ async function loadEvents() {
       events = await res.json();
     } catch (e2) { events = []; }
   }
+
+  // re-file any listing whose Type names a different section than it arrived under
+  events.forEach(ev => { ev.category = correctedCategory(ev); });
 
   // sort by nearest deadline
   events.sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999"));
