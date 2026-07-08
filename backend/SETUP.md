@@ -90,3 +90,10 @@ dedicated tool (Substack/Beehiiv) — you already have the subscriber list to im
 - Member numbers are assigned **in sequence at approval time**, so this is a real
   register — no duplicates.
 - If you ever change the website address, update `CARD_BASE` at the top of `Code.gs`.
+- **Opportunities are grouped by their `Type`, not just by the sheet tab.** If an
+  editor files a row under the wrong tab (e.g. an internship pasted into
+  *Conferences & Calls*), the site still shows it under the section its `Type`
+  names — a row whose `Type` contains "intern" appears under *Internships*, and
+  so on. Best practice is still to put each row in its matching tab, but a
+  mistake won't mis-categorise it on the public site or in the newsletter. The
+  routing rules live in `TYPE_CATEGORY_RULES` / `categoryFor_()` in `Code.gs`.
